@@ -1,0 +1,32 @@
+{
+  "languages": [
+    "TypeScript",
+    "Go",
+    "Python",
+    "Swift",
+    "C#",
+    "C++"
+  ],
+  "frontend": [
+    "React",
+    "Vue",
+    "React Native",
+    "Next.js"
+  ],
+  "backend": [
+    "Node.js",
+    "Express",
+    "RESTful API",
+    "Celery",
+    "RabbitMQ"
+  ],
+  "database": [
+    "Microst SQL Server",
+    "PostgreSQL"
+  ],
+  "devops": [
+    "Docker",
+    "Azure",
+    "Terraform"
+  ]
+}

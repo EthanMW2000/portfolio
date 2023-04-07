@@ -1,0 +1,81 @@
+{
+  "work": [
+    {
+      "title": "Developer Intern",
+      "employer": "Pillr",
+      "duration": "November 2022 - March 2023",
+      "descriptions": [
+        "Implemented UI using Vue to provide a better user experience for the users.",
+        "Made use of event-driven architecture using RabbitMQ and Celery to produce and consume data."
+      ],
+      "technologies": [
+        "Vue",
+        "TypeScript",
+        "RabbitMQ",
+        "Celery",
+        "Python"
+      ]
+    },
+    {
+      "title": "Software Engineer",
+      "employer": "StaffWise",
+      "duration": "April 2022 - Present",
+      "descriptions": [
+        "Designing and implementing a REST API in Node.js using TypeScript",
+        "Enforcing TDD using Clean Architecture for maintainable and testable code",
+        "Implementing UI designs using React and its ecosystem",
+        "Constructing and executing state-based database development in Microsoft SQL Server"
+      ],
+      "technologies": [
+        "Node.js",
+        "TypeScript",
+        "React",
+        "MS SQL Server",
+        "Terraform",
+        "Azure"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Inventory System",
+      "type": "Command Line Application",
+      "description": "A command line application that allows users to manage their inventory. It allows users to add, remove, and update items in their inventory. This was one of my first projects that I built when I was first learning how to code.",
+      "technologies": [
+        "C++"
+      ]
+    },
+    {
+      "name": "GoCreate Badge Designer",
+      "type": "WPF Application",
+      "description": "A project that I built in my free time for a previous employer. It allowed staff to quickly collect member photos and information and construct it into a badge.",
+      "technologies": [
+        "WPF",
+        "C#",
+        ".NET"
+      ]
+    },
+    {
+      "name": "GymArc",
+      "type": "Mobile Application",
+      "description": "A cross-platform workout tracking app that is designed to provide a better user experience for gym-goers. It allows users to track their progress and share their workouts with others.",
+      "technologies": [
+        "React Native",
+        "TypeScript",
+        "SQLite",
+        "GraphQL",
+        "Go",
+        "PostgreSQL"
+      ]
+    },
+    {
+      "name": "MediPort",
+      "type": "iOS Application",
+      "description": "A medical passport mobile application that provides users a convenient way to store their medical information. It allows users to also track their prescriptions and medical appointments.",
+      "technologies": [
+        "Swift",
+        "Core Data"
+      ]
+    }
+  ]
+}
