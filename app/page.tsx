@@ -4,7 +4,7 @@ import { Experience } from "@/components/Experience";
 
 export default function Home() {
   return (
-    <main className="p-4 flex flex-col bg-third-blue">
+    <main className="p-4 flex flex-col bg-white">
       <Intro />
       <About />
       <Experience />

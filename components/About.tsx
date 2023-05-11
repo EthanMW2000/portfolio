@@ -1,4 +1,4 @@
-import skills from '../public/skills.json'
+import skills from '../assets/skills.json'
 
 export function About() {
   return (
@@ -24,8 +24,14 @@ export function About() {
           </p>
         </div>
         <h1 className="text-4xl">Skills</h1>
-        <div>
-
+        <div id="scroll-container">
+          <div id="scroll-text" className='flex flex-row-reverse'>
+            {skills.languages.map(skill => (
+            <div key={skill} className='bg-gray-400 mr-6 m-2 p-2 rounded-lg'>
+                <h2 className="text-2xl">{skill}</h2>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
