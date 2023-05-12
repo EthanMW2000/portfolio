@@ -3,7 +3,7 @@ export function NavBar() {
   const routes = ["About", "Experience", "Contact"];
 
   return (
-    <div className="flex flex-row w-full justify-between bg-gray-500 items-center">
+    <div className="flex flex-row w-full justify-between bg-gray-500 items-center px-8">
       <a href="#home">
         {/*<Image alt='logo' src='/logo.svg' width={64} height={64} className='my-auto ml-4' />*/}
       </a>
