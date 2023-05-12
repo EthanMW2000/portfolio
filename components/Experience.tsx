@@ -1,15 +1,13 @@
 "use client";
 import experiences from "../assets/experience.json";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export function Experience() {
   const [dragged, setDragged] = useState(false);
-  let cardVariants = {};
-  const isMobile = window.innerWidth < 300;
 
   return (
-    <div id="experience" className="overscroll-none min-h-screen flex flex-row justify-center">
+    <div id="experience" className="overscroll-none min-h-screen flex flex-row justify-center items-center">
       <div className="flex flex-col justify-center items-center space-y-10">
         <h1 className="text-4xl">Experience</h1>
         <motion.button onDrag={() => setDragged(true)} drag className="invisible md:visible md:h text-sm font-bold">{dragged ? 'NOT ME!!' : '*try dragging*'}</motion.button>
@@ -18,8 +16,7 @@ export function Experience() {
             <motion.div
               key={work.title}
               whileHover={{ scale: 1.1 }}
-              variants={cardVariants}
-              drag={!isMobile}
+              drag
               dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
               className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] md:h-[400px]"
             >
