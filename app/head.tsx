@@ -6,5 +6,5 @@ export default function Head() {
       <meta name="description" content="Portfolio for Ethan Wells" />
       <link rel="icon" href="/logo.png" />
     </>
-  )
+  );
 }
