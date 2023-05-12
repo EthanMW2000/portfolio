@@ -5,24 +5,29 @@ import { useState } from "react";
 
 export function Experience() {
   const [dragged, setDragged] = useState(false);
+  let cardVariants = {};
+  const isMobile = window.innerWidth < 300; //Add the width you want to check for here (now 768px)
+  if (!isMobile) {
+    cardVariants = {
+      type: "drag",
+      dragConstraints: {
+        scale: 0.7,
+        rotate: 10
+      }
+    };
+  }
 
   return (
-    <div id="experience" className="min-h-screen flex flex-row justify-center">
+    <div id="experience" className="overscroll-none min-h-screen flex flex-row justify-center">
       <div className="flex flex-col justify-center items-center space-y-10">
         <h1 className="text-4xl">Experience</h1>
-        <motion.button onDrag={() => setDragged(true)} drag className="text-sm font-bold">{dragged ? 'NOT ME!!' : '*try dragging*'}</motion.button>
+        <motion.button onDrag={() => setDragged(true)} drag className="invisible md:visible md:h text-sm font-bold">{dragged ? 'NOT ME!!' : '*try dragging*'}</motion.button>
         <div className="flex flex-col lg:flex-row justify-center items-center space-y-6 lg:space-x-6 text-lg">
           {experiences.work.map((work) => (
             <motion.div
               key={work.title}
               whileHover={{ scale: 1.1 }}
-              drag
-              dragConstraints={{
-                top: -300,
-                left: -300,
-                right: 300,
-                bottom: 300,
-              }}
+              variants={cardVariants}
               className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] md:h-[400px]"
             >
               <h2 className="text-xl md:text-3xl text-white text-center py-4">

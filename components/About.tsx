@@ -21,7 +21,7 @@ export function About() {
           />
         </div>
         <div className="flex flex-col lg:flex-row">
-          <div className="flex flex-col justify-center max-w-lg">
+          <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
             <div className="flex flex-col space-y-4 text-lg pb-24">
               <p>
                 Hello! My name is Ethan Wells and I am a software engineer. For
@@ -44,7 +44,7 @@ export function About() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-center max-w-lg">
+          <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
             <div className="flex flex-col space-y-4 text-lg pb-24">
               <Marquee
                 speed={65}
