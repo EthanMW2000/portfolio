@@ -32,18 +32,6 @@
   ],
   "projects": [
     {
-      "name": "Inventory System",
-      "type": "Command Line Application",
-      "description": "A command line application that allows users to manage their inventory. It allows users to add, remove, and update items in their inventory. This was one of my first projects that I built when I was first learning how to code.",
-      "technologies": ["C++"]
-    },
-    {
-      "name": "GoCreate Badge Designer",
-      "type": "WPF Application",
-      "description": "A project that I built in my free time for a previous employer. It allowed staff to quickly collect member photos and information and construct it into a badge.",
-      "technologies": ["WPF", "C#", ".NET"]
-    },
-    {
       "name": "GymArc",
       "type": "Mobile Application",
       "description": "A cross-platform workout tracking app that is designed to provide a better user experience for gym-goers. It allows users to track their progress and share their workouts with others.",
@@ -61,6 +49,18 @@
       "type": "iOS Application",
       "description": "A medical passport mobile application that provides users a convenient way to store their medical information. It allows users to also track their prescriptions and medical appointments.",
       "technologies": ["Swift", "Core Data"]
+    },
+    {
+      "name": "GoCreate Badge Designer",
+      "type": "WPF Application",
+      "description": "A project that I built in my free time for a previous employer. It allowed staff to quickly collect member photos and information and construct it into a badge.",
+      "technologies": ["WPF", "C#", ".NET"]
+    },
+    {
+      "name": "Inventory System",
+      "type": "Command Line Application",
+      "description": "A command line application that allows users to manage their inventory. It allows users to add, remove, and update items in their inventory. This was one of my first projects that I built when I was first learning how to code.",
+      "technologies": ["C++"]
     }
   ]
 }

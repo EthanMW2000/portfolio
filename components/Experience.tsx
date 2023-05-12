@@ -62,6 +62,31 @@ export function Experience() {
             </motion.div>
           ))}
         </div>
+        <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
+          {experiences.projects.map((project) => (
+            <div
+              key={project.name}
+              className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[400px] m-4"
+            >
+              <h2 className="text-xl md:text-3xl text-white text-center py-4">
+                {project.name}
+              </h2>
+              <div className="px-4 pt-4 w-full h-full bg-gray-300 space-y-2 rounded-b-xl pb-4">
+                <h3 className="text-lg md:text-2xl">{project.type}</h3>
+                <p className="text-md md:text-lg">{project.description}</p>
+                <div className="flex flex-wrap flex-row justify-stretch space-x-2 ">
+                  {project.technologies.map((tech) => {
+                    return (
+                      <motion.p key={tech} className="text-md md:text-lg">
+                        {tech}
+                      </motion.p>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
