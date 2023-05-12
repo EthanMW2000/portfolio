@@ -60,13 +60,6 @@ export function Experience() {
                       animate={{
                         scale: [1, 1.25, 1.25, 1, 1],
                       }}
-                      drag
-                      dragConstraints={{
-                        left: -80,
-                        right: 80,
-                        top: -80,
-                        bottom: 80,
-                      }}
                       key={tech}
                       className="text-md md:text-lg px-2 my-1 mx-3 bg-gray-400 rounded-lg"
                     >
@@ -82,10 +75,14 @@ export function Experience() {
         <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
           {experiences.projects.map((project) => (
             <motion.div
-              initial={{ opacity: 0, y: -100 }}
-              transition={{ duration: 1 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              whileHover={{ scale: 1.1 }}
+              drag
+              dragConstraints={{
+                left: -300,
+                right: 300,
+                top: -300,
+                bottom: 300,
+              }}
               key={project.name}
               className="flex flex-col bg-neutral-50/15 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow"
             >
@@ -107,13 +104,6 @@ export function Experience() {
                       }}
                       animate={{
                         scale: [1, 1.25, 1.25, 1, 1],
-                      }}
-                      drag
-                      dragConstraints={{
-                        left: -80,
-                        right: 80,
-                        top: -80,
-                        bottom: 80,
                       }}
                       key={tech}
                       className="text-md md:text-lg px-2 my-1 mx-3 bg-gray-400 rounded-lg"
