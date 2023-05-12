@@ -7,7 +7,7 @@ export function About() {
   return (
     <div
       id="about"
-      className="flex flex-row justify-center min-h-screen pt-24 lg:pt-0"
+      className="flex flex-row justify-center min-h-screen pt-24 xl:pt-16"
     >
       <div className="flex flex-col justify-center content-center space-y-8">
         <h1 className="text-center text-4xl">About Me</h1>
