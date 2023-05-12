@@ -3,7 +3,7 @@ export function NavBar() {
   const routes = ["About", "Experience", "Contact"];
 
   return (
-    <div className="flex flex-row w-full justify-between bg-gray-500 items-center px-8">
+    <div className="flex flex-row w-full justify-between backdrop-blur-sm items-center px-8 shadow-md">
       <a href="#home">
         {/*<Image alt='logo' src='/logo.svg' width={64} height={64} className='my-auto ml-4' />*/}
       </a>
@@ -12,7 +12,7 @@ export function NavBar() {
           <div className="mx-2 my-auto" key={route}>
             <a
               href={`#${route.toLowerCase()}`}
-              className="group transition duration-300 hover:text-gray-400 text-lg font-semibold text-white"
+              className="group transition duration-300 hover:text-gray-400 text-lg font-semibold"
             >
               {route}
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-gray-400"></span>
