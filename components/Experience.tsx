@@ -1,17 +1,17 @@
 "use client";
 import experiences from "../assets/experience.json";
-import { motion, useTransform, useScroll } from "framer-motion";
-import { use, useEffect, useState } from "react";
-import Marquee from "react-fast-marquee";
+import { motion, useTransform, useScroll, animate } from "framer-motion";
+import { useState } from "react";
 
 export function Experience() {
   const [dragged, setDragged] = useState(false);
   const { scrollYProgress } = useScroll();
+  const scale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <div
       id="experience"
-      className="overscroll-none min-h-screen flex flex-row justify-center items-center"
+      className="min-h-screen flex flex-row justify-center items-center pt-24"
     >
       <div className="flex flex-col justify-center items-center space-y-10">
         <h1 className="text-4xl">Experience</h1>
@@ -49,10 +49,30 @@ export function Experience() {
                     >{`- ${desc}`}</p>
                   );
                 })}
-                <div className="flex flex-wrap flex-row justify-stretch space-x-2 ">
+                <div className="flex flex-wrap flex-row justify-stretch">
                   {work.technologies.map((tech) => {
                     return (
-                      <motion.p key={tech} className="text-md md:text-lg">
+                      <motion.p
+                        transition={{
+                          duration: 2,
+                          ease: "easeInOut",
+                          times: [0, 0.2, 0.5, 0.8, 1],
+                          repeat: Infinity,
+                          repeatDelay: 2,
+                        }}
+                        animate={{
+                          scale: [1, 1.25, 1.25, 1, 1],
+                        }}
+                        drag
+                        dragConstraints={{
+                          left: -80,
+                          right: 80,
+                          top: -80,
+                          bottom: 80,
+                        }}
+                        key={tech}
+                        className="text-md md:text-lg px-2 my-1 mx-3 bg-gray-400 rounded-lg"
+                      >
                         {tech}
                       </motion.p>
                     );
@@ -62,11 +82,15 @@ export function Experience() {
             </motion.div>
           ))}
         </div>
+        <h1 className="text-4xl">Projects</h1>
         <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
           {experiences.projects.map((project) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: -100 }}
+              transition={{ duration: 1 }}
+              whileInView={{ opacity: 1, y: 0 }}
               key={project.name}
-              className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[400px] m-4"
+              className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[300px] m-4"
             >
               <h2 className="text-xl md:text-3xl text-white text-center py-4">
                 {project.name}
@@ -74,17 +98,37 @@ export function Experience() {
               <div className="px-4 pt-4 w-full h-full bg-gray-300 space-y-2 rounded-b-xl pb-4">
                 <h3 className="text-lg md:text-2xl">{project.type}</h3>
                 <p className="text-md md:text-lg">{project.description}</p>
-                <div className="flex flex-wrap flex-row justify-stretch space-x-2 ">
+                <div className="flex flex-wrap flex-row justify-stretch">
                   {project.technologies.map((tech) => {
                     return (
-                      <motion.p key={tech} className="text-md md:text-lg">
+                      <motion.p
+                        transition={{
+                          duration: 2,
+                          ease: "easeInOut",
+                          times: [0, 0.2, 0.5, 0.8, 1],
+                          repeat: Infinity,
+                          repeatDelay: 2,
+                        }}
+                        animate={{
+                          scale: [1, 1.25, 1.25, 1, 1],
+                        }}
+                        drag
+                        dragConstraints={{
+                          left: -80,
+                          right: 80,
+                          top: -80,
+                          bottom: 80,
+                        }}
+                        key={tech}
+                        className="text-md md:text-lg px-2 my-1 mx-3 bg-gray-400 rounded-lg"
+                      >
                         {tech}
                       </motion.p>
                     );
                   })}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
