@@ -6,16 +6,7 @@ import { useState } from "react";
 export function Experience() {
   const [dragged, setDragged] = useState(false);
   let cardVariants = {};
-  const isMobile = window.innerWidth < 300; //Add the width you want to check for here (now 768px)
-  if (!isMobile) {
-    cardVariants = {
-      type: "drag",
-      dragConstraints: {
-        scale: 0.7,
-        rotate: 10
-      }
-    };
-  }
+  const isMobile = window.innerWidth < 300;
 
   return (
     <div id="experience" className="overscroll-none min-h-screen flex flex-row justify-center">
@@ -28,6 +19,8 @@ export function Experience() {
               key={work.title}
               whileHover={{ scale: 1.1 }}
               variants={cardVariants}
+              drag={!isMobile}
+              dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
               className="flex flex-col justify-center items-center bg-gray-500 rounded-xl w-[300px] h-full md:w-[500px] md:h-[400px]"
             >
               <h2 className="text-xl md:text-3xl text-white text-center py-4">
