@@ -17,7 +17,7 @@ export function About() {
     >
       <div className="flex flex-col justify-center content-center space-y-8">
         <h1 className="text-left text-4xl">About Me</h1>
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row justify-between">
           <div className="flex flex-col justify-center">
             <Image
               className="rounded-xl"
@@ -27,7 +27,7 @@ export function About() {
               height={275}
             />
           </div>
-          <div className="flex flex-col shadow-md backdrop-blur-md w-2/3 rounded-lg overflow-hidden">
+          <div className="flex flex-col shadow-md backdrop-blur-md w-full lg:w-2/3 rounded-lg overflow-hidden">
             <nav>
               <ul>
                 {tabs.map((item) => (
@@ -59,7 +59,7 @@ export function About() {
                         return selectedTab.label === "Games" ? (
                           <div
                             key={info.label}
-                            className="flex flex-row w-full justify-between h-[75px] border-b-2"
+                            className="flex flex-row w-full items-center text-left justify-between h-[75px] border-b-2"
                           >
                             <Image
                               alt={info.label}
@@ -67,12 +67,12 @@ export function About() {
                               height={100}
                               width={75}
                             />
-                            <p className="text-lg">{info.label}</p>
+                            <p className="md:text-lg text-left text-sm">{info.label}</p>
                           </div>
                         ) : (
                           <div
                             key={info.label}
-                            className="flex flex-row w-full justify-between h-[75px] border-b-2"
+                            className="flex flex-row w-full items-center justify-between h-[75px] border-b-2"
                           >
                             <Image
                               alt={info.label}
@@ -80,7 +80,7 @@ export function About() {
                               height={75}
                               width={140}
                             />
-                            <p className="text-lg cont">{info.label}</p>
+                            <p className="md:text-lg text-left text-sm">{info.label}</p>
                           </div>
                         );
                       })
