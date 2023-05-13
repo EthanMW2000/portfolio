@@ -34,7 +34,7 @@ export function Experience() {
                 top: -300,
                 bottom: 300,
               }}
-              className="flex flex-col bg-neutral-50/15 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[400px] px-4 backdrop-blur-sm shadow"
+              className="flex flex-col bg-neutral-50/15 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[400px] px-4 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {work.title}
@@ -84,7 +84,7 @@ export function Experience() {
                 bottom: 300,
               }}
               key={project.name}
-              className="flex flex-col bg-neutral-50/15 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow"
+              className="flex flex-col bg-neutral-50/15 rounded-xl w-[300px] h-full md:w-[500px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {project.name}
