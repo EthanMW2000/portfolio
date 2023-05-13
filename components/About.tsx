@@ -114,8 +114,8 @@ export function About() {
             </div>
           </div>
           <div className="flex flex-col h-fit shadow-md backdrop-blur-md w-full rounded-lg overflow-hidden">
-            <nav>
-              <ul>
+            <nav className="backdrop-blur-sm">
+              <ul className="backdrop-blur-sm">
                 {tabs.map((item) => (
                   <li
                     key={item.label}
