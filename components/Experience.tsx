@@ -14,7 +14,7 @@ export function Experience() {
       className="min-h-screen flex flex-row justify-center items-center pt-24"
     >
       <div className="flex flex-col justify-center items-center space-y-10">
-        <h1 className="text-4xl">Experience</h1>
+        <h1 className="text-4xl text-left">Experience</h1>
         <motion.button
           onDrag={() => setDragged(true)}
           drag

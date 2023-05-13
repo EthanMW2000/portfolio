@@ -23,10 +23,10 @@ module.exports = {
         accent: "#e37224",
       },
       fontFamily: {
-        sans: ["Montserrat", "Roboto", "sans-serif"],
+        sans: ["Inter", "Roboto", "Montserrat", "sans-serif"],
       },
       backgroundImage: {
-        wave: "url('/wave.svg')",
+        noise: "url('/nnnoise.svg')",
       },
     },
   },
