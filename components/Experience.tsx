@@ -84,7 +84,7 @@ export function Experience() {
                 bottom: 300,
               }}
               key={project.name}
-              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
+              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {project.name}
