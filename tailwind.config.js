@@ -16,10 +16,11 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: "#6096B4",
-        "secondary-blue": "#93BFCF",
-        "third-blue": "#BDCDD6",
-        "primary-tan": "#EEE9DA",
+        primary: "#1b2541",
+        secondary: "#f1f1ef",
+        "primary-button": "#048a95",
+        "secondary-button": "#9bd0d4",
+        accent: "#e37224",
       },
       fontFamily: {
         sans: ["Montserrat", "Roboto", "sans-serif"],
