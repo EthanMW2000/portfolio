@@ -1,6 +1,6 @@
 export function Intro() {
   return (
-    <div className="flex flex-row justify-center">
+    <div id="home" className="flex flex-row justify-center">
       <div className="flex flex-col justify-center min-h-screen">
         <div className="pb-4">
           <h2 className="text-2xl">
