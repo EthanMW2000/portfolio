@@ -1,24 +1,94 @@
+"use client";
 import skills from "../assets/skills.json";
 import Marquee from "react-fast-marquee";
 import Image from "next/image";
-import motion from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import "/app/globals.css"
+import { initialTabs as tabs } from "./tabs";
 
 export function About() {
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+    
   return (
     <div
       id="about"
       className="flex flex-row justify-center min-h-screen pt-24 xl:pt-16"
     >
       <div className="flex flex-col justify-center content-center space-y-8">
-        <h1 className="text-center text-4xl">About Me</h1>
-        <div className="flex flex-row justify-center">
-          <Image
-            className="rounded-xl"
-            alt="my photo"
-            src="/my-photo.jpg"
-            width={275}
-            height={275}
-          />
+        <h1 className="text-left text-4xl">About Me</h1>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-col justify-center">
+            <Image
+              className="rounded-xl"
+              alt="my photo"
+              src="/my-photo.jpg"
+              width={275}
+              height={275}
+            />
+          </div>
+          <div className="flex flex-col shadow-md backdrop-blur-md w-2/3 rounded-lg overflow-hidden">
+            <nav>
+              <ul>
+                {tabs.map((item) => (
+                  <li
+                    key={item.label}
+                    className={item === selectedTab ? "selected" : ""}
+                    onClick={() => setSelectedTab(item)}
+                  >
+                    {`${item.icon} ${item.label}`}
+                    {item === selectedTab ? (
+                      <motion.div className="underline" layoutId="underline" />
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <main>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedTab ? selectedTab.label : "empty"}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-4"
+                >
+                  {selectedTab
+                    ? selectedTab.list.map((info) => {
+                        return selectedTab.label === "Games" ? (
+                          <div
+                            key={info.label}
+                            className="flex flex-row w-full justify-between h-[75px] border-b-2"
+                          >
+                            <Image
+                              alt={info.label}
+                              src={info.icon}
+                              height={100}
+                              width={75}
+                            />
+                            <p className="text-lg">{info.label}</p>
+                          </div>
+                        ) : (
+                          <div
+                            key={info.label}
+                            className="flex flex-row w-full justify-between h-[75px] border-b-2"
+                          >
+                            <Image
+                              alt={info.label}
+                              src={info.icon}
+                              height={75}
+                              width={140}
+                            />
+                            <p className="text-lg cont">{info.label}</p>
+                          </div>
+                        );
+                      })
+                    : ""}
+                </motion.div>
+              </AnimatePresence>
+            </main>
+          </div>
         </div>
         <div className="flex flex-col lg:flex-row">
           <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
