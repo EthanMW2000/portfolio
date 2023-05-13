@@ -35,7 +35,7 @@ export const allTabs = [
           icon: "/one-piece.png",
         },
         {
-          label: "Fullmetal Alchemist: Brotherhood",
+          label: "Fullmetal Alchemist",
           icon: "/fullmetal-alchemist.webp",
         },
       ] 
