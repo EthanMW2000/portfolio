@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 nav {
-  background: #fdfdfd;
+  background: #f1f1ef;
   padding: 5px 5px 0;
   border-radius: 10px;
   border-bottom-left-radius: 0;
@@ -50,7 +50,7 @@ li {
   width: 100%;
   padding: 10px 15px;
   position: relative;
-  background: white;
+  background: #f1f1ef;
   cursor: pointer;
   height: 24px;
   display: flex;
@@ -68,11 +68,12 @@ li {
   left: 0;
   right: 0;
   height: 1px;
-  background: #000;
+  color: #e3742441;
+  background: #e37224;
 }
 
 li.selected {
-  background: #eee;
+  background: #9bd0d443;
 }
 
 li button {

@@ -5,7 +5,7 @@ import { Contact } from "@/components/Contact";
 
 export default function Home() {
   return (
-    <main className="p-4 flex flex-col">
+    <main className="p-4 flex flex-col text-primary bg-secondary">
       <Intro />
       <About />
       <Experience />
