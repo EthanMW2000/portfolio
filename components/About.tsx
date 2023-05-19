@@ -37,7 +37,7 @@ export function About() {
               </p>
               <p>
                 Currently I am working as a software engineer with StaffWise.
-                With them I am developing a web application that wll give
+                With them I am developing a web application that gives
                 hospitals the proper budgetting tools. At the same time I am
                 completeing my senior year at Wichita State University, after
                 which I will have received a B.S. in Computer Science.
