@@ -1,5 +1,5 @@
 "use client";
-import experiences from "../assets/experience.json";
+import experiences from "../../assets/experience.json";
 import { motion, useTransform, useScroll, animate } from "framer-motion";
 import { useState } from "react";
 
