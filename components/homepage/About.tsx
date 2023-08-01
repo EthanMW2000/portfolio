@@ -21,8 +21,8 @@ export function About() {
           <div className="flex flex-col justify-center">
             <Image
               className="rounded-xl"
-              alt="my photo"
-              src="/my-photo.jpg"
+              alt="A headshot of Ethan Wells"
+              src="/professional-headshot.jpeg"
               width={275}
               height={275}
             />
