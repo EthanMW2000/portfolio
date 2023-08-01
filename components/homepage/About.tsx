@@ -1,15 +1,15 @@
 "use client";
-import skills from "../assets/skills.json";
+import skills from "../../assets/skills.json";
 import Marquee from "react-fast-marquee";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import "/app/globals.css"
+import "/app/globals.css";
 import { initialTabs as tabs } from "./tabs";
 
 export function About() {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
-    
+
   return (
     <div
       id="about"
@@ -37,10 +37,10 @@ export function About() {
               </p>
               <p>
                 Currently I am working as a software engineer with StaffWise.
-                With them I am developing a web application that gives
-                hospitals the proper budgetting tools. At the same time I am
-                completeing my senior year at Wichita State University, after
-                which I will have received a B.S. in Computer Science.
+                With them I am developing a web application that gives hospitals
+                the proper budgetting tools. At the same time I am completeing
+                my senior year at Wichita State University, after which I will
+                have received a B.S. in Computer Science.
               </p>
               <p>
                 During my spare moments I have been devoting my time to working
@@ -54,11 +54,7 @@ export function About() {
         <div className="flex flex-col lg:flex-row mb-24 lg:space-x-8 justify-between items-center">
           <div className="flex flex-col justify-between max-w-xs md:max-w-lg">
             <div className="flex flex-col space-y-4 text-lg">
-              <Marquee
-                speed={65}
-                pauseOnHover={true}
-                autoFill={true}
-              >
+              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
                 {skills.languages.map((skill) => (
                   <div key={skill} className=" m-2 p-2 rounded-lg">
                     <h2 className="text-2xl">{skill}</h2>
@@ -77,11 +73,7 @@ export function About() {
                   </div>
                 ))}
               </Marquee>
-              <Marquee
-                speed={65}
-                pauseOnHover={true}
-                autoFill={true}
-              >
+              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
                 {skills.backend.map((skill) => (
                   <div key={skill} className=" m-2 p-2 rounded-lg">
                     <h2 className="text-2xl">{skill}</h2>
@@ -100,11 +92,7 @@ export function About() {
                   </div>
                 ))}
               </Marquee>
-              <Marquee
-                speed={65}
-                pauseOnHover={true}
-                autoFill={true}
-              >
+              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
                 {skills.devops.map((skill) => (
                   <div key={skill} className=" m-2 p-2 rounded-lg">
                     <h2 className="text-2xl">{skill}</h2>

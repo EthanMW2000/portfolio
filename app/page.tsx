@@ -1,7 +1,7 @@
-import { Intro } from "@/components/Intro";
-import { About } from "@/components/About";
-import { Experience } from "@/components/Experience";
-import { Contact } from "@/components/Contact";
+import { Intro } from "@/components/homepage/Intro";
+import { About } from "@/components/homepage/About";
+import { Experience } from "@/components/homepage/Experience";
+import { Contact } from "@/components/homepage/Contact";
 
 export default function Home() {
   return (
