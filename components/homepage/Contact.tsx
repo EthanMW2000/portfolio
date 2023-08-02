@@ -1,4 +1,3 @@
-
 export function Contact() {
   return (
     <div
@@ -10,9 +9,9 @@ export function Contact() {
           <div className="flex flex-col rounded-xl px-4 space-y-6">
             <h2 className="text-xl md:text-3xl text-center py-4">{`Let's Talk`}</h2>
             <p className="text-md md:text-lg">
-              I am currently looking for new opportunities. If you have any
-              questions or would like to get in touch, please feel free to
-              contact me using any of these links.
+              If you have any questions or would like to get in touch, please
+              feel free to contact me using any of these links and connect with
+              me.
             </p>
             <div className="flex flex-row justify-center items-center space-x-4 text-secondary-button">
               <a
