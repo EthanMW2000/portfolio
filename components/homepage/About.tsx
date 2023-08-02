@@ -18,15 +18,6 @@ export function About() {
       <div className="flex flex-col justify-center content-center space-y-8">
         <h1 className="text-left text-4xl">About Me</h1>
         <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:space-x-24 justify-between">
-          <div className="flex flex-col justify-center">
-            <Image
-              className="rounded-xl"
-              alt="A headshot of Ethan Wells"
-              src="/professional-headshot.jpeg"
-              width={275}
-              height={275}
-            />
-          </div>
           <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
             <div className="flex flex-col space-y-4 text-lg text-justify">
               <p>
@@ -49,6 +40,15 @@ export function About() {
                 photography, anime, and games.
               </p>
             </div>
+          </div>
+          <div className="flex flex-col justify-center">
+            <Image
+              className="rounded-xl border-accent border-2 shadow-xl backdrop-blur-lg hover:shadow-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+              alt="A headshot of Ethan Wells"
+              src="/professional-headshot.jpeg"
+              width={275}
+              height={275}
+            />
           </div>
         </div>
         <div className="flex flex-col lg:flex-row mb-24 lg:space-x-8 justify-between items-center">
