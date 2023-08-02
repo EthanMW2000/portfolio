@@ -36,17 +36,17 @@ export function About() {
                 in web and app development.
               </p>
               <p>
-                Currently I am working as a software engineer with StaffWise.
-                With them I am developing a web application that gives hospitals
-                the proper budgetting tools. At the same time I am completeing
-                my senior year at Wichita State University, after which I will
-                have received a B.S. in Computer Science.
+                Currently I am working as a software engineer with Invista. With
+                them I am helping innovate within their operations. At the same
+                time I am completeing my senior year at Wichita State
+                University, after which I will have received a B.S. in Computer
+                Science.
               </p>
               <p>
                 During my spare moments I have been devoting my time to working
                 with
                 <b> Go</b> and <b>Swift</b>. Outside of programming I enjoy
-                photography, anime, and League.
+                photography, anime, and games.
               </p>
             </div>
           </div>
