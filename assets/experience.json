@@ -1,9 +1,18 @@
 {
   "work": [
     {
+      "title": "Software Engineer Intern",
+      "employer": "Invista",
+      "duration": "July 2023 - Present",
+      "descriptions": [
+        "Leading development on a digital twin service for Invista manufacturing plants"
+      ],
+      "technologies": ["TypeScript", "React", "Python"]
+    },
+    {
       "title": "Software Engineer",
       "employer": "StaffWise",
-      "duration": "April 2022 - Present",
+      "duration": "April 2022 - July 2023",
       "descriptions": [
         "Designing and implementing a REST API in Node.js using TypeScript",
         "Implementing UI designs using React and its ecosystem",
@@ -16,6 +25,24 @@
         "MS SQL Server",
         "Terraform",
         "Azure"
+      ]
+    },
+    {
+      "title": "Software Engineer Intern",
+      "employer": "Nuvative",
+      "duration": "April 2023 - July 2023",
+      "descriptions": [
+        "Improving coverage on their microservice by more than 30%",
+        "Following DDD principles to improve the quality of the codebase",
+        "Transitioning legacy code from JQuery to React"
+      ],
+      "technologies": [
+        "TypeScript",
+        "React",
+        "MS SQL Server",
+        "C#",
+        ".NET",
+        "JQuery"
       ]
     },
     {
