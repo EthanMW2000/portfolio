@@ -22,7 +22,7 @@ export function Experience() {
         >
           {dragged ? "NOT ME!!" : "*try dragging*"}
         </motion.button>
-        <div className="flex flex-col xl:flex-row justify-center items-center space-y-6 xl:space-y-0 xl:space-x-6 text-lg">
+        <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
           {experiences.work.map((work) => (
             <motion.div
               key={work.title}
@@ -34,7 +34,7 @@ export function Experience() {
                 top: -300,
                 bottom: 300,
               }}
-              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] xl:w-[550px] md:h-[400px] px-4 backdrop-blur-sm shadow-md"
+              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {work.title}
