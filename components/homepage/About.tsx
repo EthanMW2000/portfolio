@@ -37,7 +37,7 @@ export function About() {
                 During my spare moments I have been devoting my time to working
                 with
                 <b> Go</b> and <b>Swift</b>. Outside of programming I enjoy
-                photography, anime, and games.
+                <a href="/photography" className="text-primary-button font-bold hover:underline animate-pulse"> photography</a>, anime, and games.
               </p>
             </div>
           </div>
