@@ -21,9 +21,6 @@ export default function RootLayout({
       <Analytics />
       <head />
       <body>
-        <div className="flex w-full fixed top-0 z-10">
-          <NavBar />
-        </div>
         {children}
       </body>
     </html>
