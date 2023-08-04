@@ -1,3 +1,5 @@
+import { ChevronRight } from "../ChevronRight";
+
 export function Contact() {
   return (
     <div
@@ -57,15 +59,26 @@ export function Contact() {
                 </svg>
               </a>
             </div>
-            <div className="flex flex-row justify-center">
-              <a
-                href={"Wells-Ethan.pdf"}
-                target={"_blank"}
-                rel="noreferrer"
-                className="text-md md:text-lg bg-primary-button rounded-lg px-4 py-2 text-neutral-50"
-              >
-                Resume
-              </a>
+            <div className="flex flex-row justify-center gap-4">
+              <div className="flex flex-row justify-center">
+                <a
+                  href={"Wells-Ethan.pdf"}
+                  target={"_blank"}
+                  rel="noreferrer"
+                  className="text-md md:text-lg bg-primary-button rounded-lg px-4 py-2 text-neutral-50"
+                >
+                  Resume
+                </a>
+              </div>
+              <div className="flex flex-row">
+                <a
+                  href={"/photography"}
+                  className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center"
+                >
+                  Photography Portfolio
+                  <ChevronRight width={24} height={24} fill="#1b2541" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
