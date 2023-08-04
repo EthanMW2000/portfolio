@@ -1,5 +1,4 @@
-import { ChevronRight } from "../ChevronRight";
-
+import { ChevronRight } from "../icons/ChevronRight";
 
 export function Intro() {
   return (
@@ -27,7 +26,7 @@ export function Intro() {
           <div className="flex flex-row">
             <a
               href={"#about"}
-              className="text-md md:text-lg bg-primary-button rounded-lg pl-4 pr-2 py-2 text-secondary flex flex-row justify-center items-center"
+              className="text-md md:text-lg bg-primary-button rounded-lg pl-4 pr-2 py-2 text-secondary flex flex-row justify-center items-center hover:bg-secondary-button transition duration-300 ease-in-out"
             >
               Discover More
               <ChevronRight width={24} height={24} fill="#f1f1ef" />
@@ -37,7 +36,7 @@ export function Intro() {
           <div className="flex flex-row">
             <a
               href={"/photography"}
-              className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center"
+              className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center hover:bg-primary-button transition duration-300 ease-in-out"
             >
               Photography Portfolio
               <ChevronRight width={24} height={24} fill="#1b2541" />
