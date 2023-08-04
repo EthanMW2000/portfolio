@@ -25,7 +25,7 @@ export function Experience() {
         <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
           {experiences.work.map((work) => (
             <motion.div
-              key={work.title}
+              key={work.employer}
               whileHover={{ scale: 1.1 }}
               drag
               dragConstraints={{
