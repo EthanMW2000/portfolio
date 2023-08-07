@@ -1,4 +1,5 @@
 import { ChevronRight } from "@/components/icons/ChevronRight";
+import { ImageContainer } from "@/components/photography/ImageContainer";
 import Sidebar from "@/components/photography/Sidebar";
 
 export default function Photography() {
@@ -19,6 +20,7 @@ export default function Photography() {
             <ChevronRight width={24} height={24} fill="#1b2541" />
           </a>
         </div>
+        <ImageContainer />
       </div>
     </main>
   );
