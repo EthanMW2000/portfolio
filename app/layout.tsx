@@ -1,4 +1,3 @@
-import { NavBar } from "@/components/homepage/NavBar";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 
