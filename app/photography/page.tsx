@@ -1,44 +1,11 @@
 import { ChevronRight } from "@/components/icons/ChevronRight";
 import { ImageContainer } from "@/components/photography/ImageContainer";
 import Sidebar from "@/components/photography/Sidebar";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { _Object } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client([
-  {
-    region: process.env.S3_BUCKET_REGION,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_KEY,
-    },
-  },
-]);
 
-const command = new ListObjectsV2Command({
-  Bucket: process.env.S3_BUCKET_NAME,
-  Prefix: process.env.S3_BUCKET_PREFIX,
-});
-
-const returnImages = () => {
-  let images: string[] = [];
-  s3.send(command)
-      .then((data) => {
-        if (!data.Contents) return console.log("No S3 objects found");
-        data.Contents.forEach((image) => {
-          if (!image.Key) return;
-          images.push(image.Key);
-        });
-      })
-      .catch((err) => {
-        console.log("Unable to retrieve S3 objects", err);
-      });
-
-  return images;
-};
-
-export default function Photography() {
-  const images = returnImages();
-
-    
+export default async function Photography() {
+  const images:_Object[] = await fetch('/api/photography').then((res) => res.json());
 
   return (
     <main>
@@ -61,7 +28,7 @@ export default function Photography() {
           return (
             <ImageContainer
               key={index}
-              url={`https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_S3_BUCKET_REGION}.amazonaws.com/${image}`}
+              url={`https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${image}`}
             />
           );
         })}
