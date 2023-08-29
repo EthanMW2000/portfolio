@@ -41,7 +41,7 @@ export function About() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center align-center">
             <Image
               className="rounded-xl border-accent border-2 shadow-xl backdrop-blur-lg hover:shadow-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
               alt="A headshot of Ethan Wells"
@@ -140,6 +140,7 @@ export function About() {
                               src={info.icon}
                               height={100}
                               width={75}
+                              loading="eager"
                             />
                             <p className="md:text-lg text-left text-sm">
                               {info.label}
@@ -155,6 +156,7 @@ export function About() {
                               src={info.icon}
                               height={75}
                               width={140}
+                              loading="eager"
                             />
                             <p className="md:text-lg text-left text-sm">
                               {info.label}
