@@ -1,14 +1,23 @@
-import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, S3, S3ClientConfig } from "@aws-sdk/client-s3";
 
-const imageClient = new S3Client([
-  {
-    region: process.env.S3_BUCKET_REGION,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_KEY,
-    },
+const bucketRegion = process.env.NEXT_PUBLIC_S3_REGION as string;
+const accessKeyId = process.env.S3_ACCESS_KEY_ID as string;
+const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY as string;
+
+const s3Config: S3ClientConfig = {
+  region: bucketRegion,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
   },
-]);
+};
+
+const credentials = {
+  accessKeyId,
+  secretAccessKey,
+};
+
+const imageClient = new S3({ region: "us-east-2" });
 
 const retrieveImageCommand = new ListObjectsV2Command({
   Bucket: process.env.S3_BUCKET_NAME,
@@ -25,6 +34,7 @@ async function retrieveImages() {
 
 export async function GET(request: Request) {
   const images = await retrieveImages();
+  console.log("images", images);
   return new Response(JSON.stringify(images), {
     headers: { "content-type": "application/json" },
   });
