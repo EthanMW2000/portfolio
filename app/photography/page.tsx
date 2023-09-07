@@ -5,7 +5,7 @@ import { _Object } from "@aws-sdk/client-s3";
 
 
 export default async function Photography() {
-  const images:_Object[] = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/photography`).then((res) => res.json());
+  // const images:_Object[] = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/photography`).then((res) => res.json());
 
   return (
     <main>
@@ -24,14 +24,14 @@ export default async function Photography() {
             <ChevronRight width={24} height={24} fill="#1b2541" />
           </a>
         </div>
-        {images.map((image, index) => {
+        {/* {images.map((image, index) => {
           return (
             <ImageContainer
               key={index}
               url={`https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${image}`}
             />
           );
-        })}
+        })} */}
       </div>
     </main>
   );
