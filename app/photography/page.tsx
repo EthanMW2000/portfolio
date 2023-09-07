@@ -5,7 +5,7 @@ import { _Object } from "@aws-sdk/client-s3";
 
 
 export default async function Photography() {
-  const images:_Object[] = await fetch('/api/photography').then((res) => res.json());
+  const images:_Object[] = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/photography`).then((res) => res.json());
 
   return (
     <main>
