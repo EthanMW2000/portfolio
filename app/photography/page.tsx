@@ -3,10 +3,15 @@ import { ImageContainer } from "@/components/photography/ImageContainer";
 import Sidebar from "@/components/photography/Sidebar";
 import { _Object } from "@aws-sdk/client-s3";
 
-
 export default async function Photography() {
-  const images:(string | undefined)[] = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/photography`, {cache: "no-store"}).then((res) => res.json());
-
+  const images: (string | undefined)[] = await fetch(
+    `${process.env.NEXT_PUBLIC_URL}/api/photography`,
+    { cache: "no-store" }
+  ).then((res) => res.json()).catch((err) => {
+    console.error(err);
+    return [];
+  }
+  );
 
   return (
     <main>
