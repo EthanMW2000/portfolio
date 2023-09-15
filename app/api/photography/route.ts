@@ -1,37 +1,29 @@
-// import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 
-// const imageClient = new S3Client([
-//   {
-//     region: process.env.S3_BUCKET_REGION,
-//     credentials: {
-//       accessKeyId: process.env.AWS_ACCESS_KEY,
-//       secretAccessKey: process.env.AWS_SECRET_KEY,
-//     },
-//   },
-// ]);
+const imageClient = new S3Client({ region: process.env.S3_BUCKET_REGION });
+const imageBucket = process.env.S3_BUCKET_NAME;
+const imagePrefix = process.env.S3_BUCKET_PREFIX;
 
-// const retrieveImageCommand = new ListObjectsV2Command({
-//   Bucket: process.env.S3_BUCKET_NAME,
-//   Prefix: process.env.S3_BUCKET_PREFIX,
-// });
+const retrieveImageCommand = new ListObjectsV2Command({
+  Bucket: imageBucket,
+  Prefix: imagePrefix,
+});
 
-// async function retrieveImages() {
-//   const { Contents } = await imageClient.send(retrieveImageCommand);
-//   if (!Contents) {
-//     throw new Error("No images found");
-//   }
-//   return Contents;
-// }
+async function retrieveImages() {
+  const { Contents } = await imageClient.send(retrieveImageCommand);
+  if (!Contents) {
+    throw new Error("No images found");
+  }
+  return Contents;
+}
 
-// export async function GET(request: Request) {
-//   const images = await retrieveImages();
-//   return new Response(JSON.stringify(images), {
-//     headers: { "content-type": "application/json" },
-//   });
-// }
+export async function GET(request: Request) {
+  const images = await retrieveImages();
+  const filteredImages = images.filter((image) => {
+    return image.Key !== imagePrefix;
+  }).map((image) => {return image.Key});
 
-export async function GET(request: Request) { 
-  return new Response("Hello world!", {
-    headers: { "content-type": "text/plain" },
+  return new Response(JSON.stringify(filteredImages), {
+    headers: { "content-type": "application/json" },
   });
 }
