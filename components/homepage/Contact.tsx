@@ -23,13 +23,13 @@ export function Contact() {
               <LinkedInIcon />
               <GithubIcon />
             </div>
-            <div className="flex flex-row justify-center gap-4">
+            <div className="flex flex-row justify-center sm:gap-4 gap-2">
               <div className="flex flex-row justify-center">
                 <a
                   href={"Wells-Ethan.pdf"}
                   target={"_blank"}
                   rel="noreferrer"
-                  className="text-md md:text-lg bg-primary-button rounded-lg px-4 py-2 text-neutral-50 transition duration-300 ease-in-out hover:bg-secondary-button"
+                  className="text-md md:text-lg bg-primary-button rounded-lg px-4 py-2 text-neutral-50 transition duration-300 ease-in-out hover:bg-secondary-button flex flex-row justify-center items-center"
                 >
                   Resume
                 </a>
