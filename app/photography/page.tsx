@@ -4,10 +4,14 @@ import Sidebar from "@/components/photography/Sidebar";
 import { _Object } from "@aws-sdk/client-s3";
 
 export default async function Photography() {
-  const images: _Object[] = await fetch(
-    `${process.env.NEXT_PUBLIC_ORIGIN}/api/photography`,
+  const images: (string | undefined)[] = await fetch(
+    `${process.env.NEXT_PUBLIC_URL}/api/photography`,
     { cache: "no-store" }
-  ).then((res) => res.json());
+  ).then((res) => res.json()).catch((err) => {
+    console.error(err);
+    return [];
+  }
+  );
 
   return (
     <main>
@@ -29,8 +33,8 @@ export default async function Photography() {
         {images.map((image, index) => {
           return (
             <ImageContainer
-              key={index}
-              url={`${process.env.NEXT_PUBLIC_S3_URL}${image}`}
+              key={`${index}-${image}`}
+              url={`https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${image}`}
             />
           );
         })}

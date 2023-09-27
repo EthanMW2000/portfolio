@@ -1,27 +1,12 @@
-import { ListObjectsV2Command, S3, S3ClientConfig } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 
-const bucketRegion = process.env.NEXT_PUBLIC_S3_REGION as string;
-const accessKeyId = process.env.S3_ACCESS_KEY_ID as string;
-const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY as string;
-
-const s3Config: S3ClientConfig = {
-  region: bucketRegion,
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-};
-
-const credentials = {
-  accessKeyId,
-  secretAccessKey,
-};
-
-const imageClient = new S3({ region: "us-east-2" });
+const imageClient = new S3Client({ region: process.env.S3_BUCKET_REGION });
+const imageBucket = process.env.S3_BUCKET_NAME;
+const imagePrefix = process.env.S3_BUCKET_PREFIX;
 
 const retrieveImageCommand = new ListObjectsV2Command({
-  Bucket: process.env.S3_BUCKET_NAME,
-  Prefix: process.env.S3_BUCKET_PREFIX,
+  Bucket: imageBucket,
+  Prefix: imagePrefix,
 });
 
 async function retrieveImages() {
@@ -34,8 +19,11 @@ async function retrieveImages() {
 
 export async function GET(request: Request) {
   const images = await retrieveImages();
-  console.log("images", images);
-  return new Response(JSON.stringify(images), {
+  const filteredImages = images.filter((image) => {
+    return image.Key !== imagePrefix;
+  }).map((image) => {return image.Key});
+
+  return new Response(JSON.stringify(filteredImages), {
     headers: { "content-type": "application/json" },
   });
 }
