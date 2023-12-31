@@ -4,7 +4,7 @@ import Sidebar from "@/components/photography/Sidebar";
 import { _Object } from "@aws-sdk/client-s3";
 
 export default async function Photography() {
-  const images: (string | undefined)[] = await fetch(
+  const imagesUrls: (string | undefined)[] = await fetch(
     `${process.env.NEXT_PUBLIC_URL}/api/photography`,
     { cache: "no-store" }
   ).then((res) => res.json()).catch((err) => {
@@ -30,11 +30,11 @@ export default async function Photography() {
             <ChevronRight width={24} height={24} fill="#1b2541" />
           </a>
         </div>
-        {images.map((image, index) => {
+        {imagesUrls.map((image, index) => {
           return (
             <ImageContainer
               key={`${index}-${image}`}
-              url={`https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${image}`}
+              url={image as string}
             />
           );
         })}
