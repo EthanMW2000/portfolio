@@ -1,7 +1,7 @@
 {
   "languages": ["TypeScript", "Go", "Python", "Swift", "C#"],
   "frontend": ["React", "Vue", "React Native", "Next.js"],
-  "backend": ["Node.js", "Express", "RESTful API", ".NET"],
-  "database": ["Microst SQL Server", "PostgreSQL"],
-  "devops": ["Docker", "Azure", "Terraform"]
+  "backend": ["Node.js", "Nest.js", "Express", "RESTful API", ".NET"],
+  "database": ["DynamoDB", "MSSQL Server", "PostgreSQL"],
+  "devops": ["AWS", "Docker", "Azure", "Terraform"]
 }

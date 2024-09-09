@@ -21,23 +21,30 @@ export function About() {
           <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
             <div className="flex flex-col space-y-4 text-lg text-justify">
               <p>
-                Hello! My name is Ethan Wells and I am a software engineer. For
-                a long time I have been interested in programming and over the
-                course of my college career I have found myself most interested
-                in web and app development.
+                Hello! My name is Ethan Wells and I am a software engineer. I
+                have experience with a variety of languages and frameworks, and
+                fullstack development. Working on the forefront of technology is
+                something I am passionate about. I am always looking for new
+                ways to innovate and improve my skills.
               </p>
               <p>
-                Currently I am working as a software engineer with Invista. With
-                them I am helping innovate within their operations. At the same
-                time I am completeing my senior year at Wichita State
-                University, after which I will have received a B.S. in Computer
-                Science.
+                I graduated from Wichita State University with a Bachelor of
+                Science in Computer Science. Currently, I am working as a
+                software engineer with Invista, where I am helping to drive
+                innovation within their operations.
               </p>
               <p>
                 During my spare moments I have been devoting my time to working
                 with
                 <b> Go</b> and <b>Swift</b>. Outside of programming I enjoy
-                <a href="/photography" className="text-primary-button font-bold hover:underline animate-pulse"> photography</a>, anime, and games.
+                <a
+                  href="/photography"
+                  className="text-primary-button font-bold hover:underline animate-pulse"
+                >
+                  {" "}
+                  photography
+                </a>
+                , anime, and games.
               </p>
             </div>
           </div>

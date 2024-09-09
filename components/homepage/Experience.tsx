@@ -34,7 +34,7 @@ export function Experience() {
                 top: -300,
                 bottom: 300,
               }}
-              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] md:h-[325px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
+              className="flex flex-col rounded-xl w-[300px] h- md:w-[500px] 2xl:w-[700px] xl:w-[600px] p-3 m-3 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {work.title}
@@ -84,7 +84,7 @@ export function Experience() {
                 bottom: 300,
               }}
               key={project.name}
-              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] md:h-[300px] xl:h-[275px] px-4 m-3 backdrop-blur-sm shadow-md"
+              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] p-3 m-3 backdrop-blur-sm shadow-md"
             >
               <h2 className="text-xl md:text-3xl text-center py-4">
                 {project.name}
@@ -92,7 +92,7 @@ export function Experience() {
               <h3 className="text-lg md:text-2xl">{project.type}</h3>
               <p className="text-md md:text-lg">{project.description}</p>
               <div className="flex flex-wrap flex-row justify-stretch">
-                {project.technologies.map((tech) => {
+                {project.technologies && project.technologies.map((tech) => {
                   return (
                     <motion.p
                       transition={{

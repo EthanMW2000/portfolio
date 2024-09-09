@@ -9,16 +9,16 @@ export const allTabs = [
       icon: "🎮",
       list : [
         {
-          label: "League of Legends",
-          icon: "/league-of-legends.svg",
+          label: "Resident Evil 4",
+          icon: "/re4.png",
         },
         {
-          label: "Apex Legends",
-          icon: "/apex-legends.svg",
+          label: "College Football 25",
+          icon: "/CFB-logo.png",
         },
         {
-          label: "CS:GO",
-          icon: "/csgo.svg",
+          label: "Counter Strike 2",
+          icon: "/cs2.png",
         },
       ]
     },
