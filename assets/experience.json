@@ -5,9 +5,19 @@
       "employer": "Invista",
       "duration": "July 2023 - Present",
       "descriptions": [
-        "Leading development on a digital twin service for Invista manufacturing plants"
+        "Leading development on a digital twin service for Invista manufacturing plants",
+        "Collaborated with operators to design a responsive and interactive digital twin in Next.js",
+        "Implemented RBAC to ensure security of Invista's intellectual property",
+        "Interfaced with webhooks to keep our graph database and digital twin consistent across data manipulations"
       ],
-      "technologies": ["TypeScript", "React", "Python"]
+      "technologies": [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "Nest.js",
+        "AWS",
+        "DynamoDB"
+      ]
     },
     {
       "title": "Software Engineer",
@@ -58,6 +68,20 @@
   ],
   "projects": [
     {
+      "name": "Astrorpheus",
+      "type": "Web Application",
+      "description": [
+        "Designed and implemented 3D point cloud viewer",
+        "Retrieved and served 3D point cloud models and audio files from S3",
+        "Collaborated with a team on a strict deadline to produce a project that won 1st place in the NASA Space Apps Challenge"
+      ],
+      "technologies": [
+        "TypeScript",
+        "React",
+        "Python"
+      ]
+    },
+    {
       "name": "GymArc",
       "type": "Mobile Application",
       "description": "A cross-platform workout tracking app that is designed to provide a better user experience for gym-goers. It allows users to track their progress and share their workouts with others.",
@@ -75,18 +99,6 @@
       "type": "iOS Application",
       "description": "A medical passport mobile application that provides users a convenient way to store their medical information. It allows users to also track their prescriptions and medical appointments.",
       "technologies": ["Swift", "Core Data"]
-    },
-    {
-      "name": "GoCreate Badge Designer",
-      "type": "WPF Application",
-      "description": "A project that I built in my free time for a previous employer. It allowed staff to quickly collect member photos and information and construct it into a badge.",
-      "technologies": ["WPF", "C#", ".NET"]
-    },
-    {
-      "name": "Dynamic Tic Tac Toe",
-      "type": "React Application",
-      "description": "A tic tac toe board that can be dynamically resized for larger games and calculates the winner through graph traversal.",
-      "technologies": ["TypeScript", "React"]
     }
   ]
 }
