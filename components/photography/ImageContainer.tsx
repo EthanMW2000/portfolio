@@ -3,7 +3,7 @@
 import { S3Object } from "@/types";
 
 export function ImageContainer({ s3Object }: { s3Object: S3Object }) {
-  const formattedDate = s3Object.metadata.DateTimeOriginal
+  const formattedDate = s3Object.metadata?.DateTimeOriginal
     ? new Date(s3Object.metadata.DateTimeOriginal).toLocaleString("en-US", {
         year: "numeric",
         month: "long",
