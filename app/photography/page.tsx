@@ -7,7 +7,7 @@ export default async function Photography() {
   const retrieveImages = async () => {
     const imagesUrls: S3Object[] = await fetch(
       `${process.env.NEXT_PUBLIC_URL}/api/photography`,
-      { cache: "no-store" }
+      { next: { revalidate: 3600 } }
     )
       .then((res) =>
         res
@@ -22,6 +22,7 @@ export default async function Photography() {
       });
 
     imagesUrls.sort((a, b) => {
+      if(!a.metadata.DateTimeOriginal || !b.metadata.DateTimeOriginal) return 0;
       return (
         Number(new Date(b.metadata.DateTimeOriginal)) -
         Number(new Date(a.metadata.DateTimeOriginal))
@@ -51,7 +52,9 @@ export default async function Photography() {
           </a>
         </div>
         {imagesUrls.map((image, index) => {
-          return <ImageContainer key={`${index}-${image.url}`} s3Object={image} />;
+          return (
+            <ImageContainer key={`${index}-${image.url}`} s3Object={image} />
+          );
         })}
       </div>
     </main>
