@@ -4,14 +4,26 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-export const dynamic = "force-dynamic";
+import fetch from "node-fetch";
+import exifr from "exifr";
 
 const imageClient = new S3Client();
 const imageBucket = process.env.S3_BUCKET_NAME;
 const imagePrefix = process.env.S3_BUCKET_PREFIX;
 
-export async function GET(request: Request) {
+async function getImageMetadata(url: string): Promise<any> {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+
+  try {
+    const metadata = await exifr.parse(arrayBuffer);
+    return metadata;
+  } catch (e) {
+    console.error("Error parsing metadata", e);
+  }
+}
+
+export async function GET(_: Request) {
   const allObjects = [];
   let continuationToken;
 
@@ -38,18 +50,30 @@ export async function GET(request: Request) {
     });
 
   try {
-    const signedUrls = await Promise.allSettled(
-      filteredImages.map((image) => {
+    const imageDataPromises = await Promise.allSettled(
+      filteredImages.map(async (image) => {
         const params: GetObjectCommand = new GetObjectCommand({
           Bucket: imageBucket,
           Key: image,
         });
 
-        return getSignedUrl(imageClient, params, { expiresIn: 3600 });
+        const url = await getSignedUrl(imageClient, params, {
+          expiresIn: 3600,
+        });
+        const metadata = await getImageMetadata(url);
+
+        return {
+          url,
+          metadata,
+        };
       })
     );
 
-    return new Response(JSON.stringify(signedUrls));
+    const imageData = imageDataPromises
+      .filter((promise) => promise.status === "fulfilled")
+      .map((promise) => promise.value);
+
+    return new Response(JSON.stringify(imageData));
   } catch (err) {
     console.log(err);
     return new Response("Error fetching images", { status: 500 });
