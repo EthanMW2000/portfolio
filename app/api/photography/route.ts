@@ -69,9 +69,11 @@ export async function GET(_: Request) {
       })
     );
 
-    const imageData = imageDataPromises
-      .filter((promise) => promise.status === "fulfilled")
-      .map((promise) => promise.value);
+    const imageData = imageDataPromises.map((promise) => {
+      if (promise.status === "fulfilled") {
+        return promise.value;
+      }
+    })
 
     return new Response(JSON.stringify(imageData));
   } catch (err) {
