@@ -28,7 +28,20 @@ module.exports = {
       backgroundImage: {
         noise: "url('/nnnoise.svg')",
       },
+      textShadow: {
+        outline: "0.5px 0.5px 0px rgba(0, 0, 0, 1)",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".text-shadow-outline": {
+          textShadow: "0.5px 0.5px 0px rgba(0, 0, 0, 1)",
+        },
+      };
+
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
 };
