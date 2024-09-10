@@ -1,17 +1,37 @@
 import { ChevronRight } from "@/components/icons/ChevronRight";
 import { ImageContainer } from "@/components/photography/ImageContainer";
 import Sidebar from "@/components/photography/Sidebar";
-import { _Object } from "@aws-sdk/client-s3";
+import { S3Object } from "@/types";
 
 export default async function Photography() {
-  const imagesUrls: (string | undefined)[] = await fetch(
-    `${process.env.NEXT_PUBLIC_URL}/api/photography`,
-    { cache: "no-store" }
-  ).then((res) => res.json()).catch((err) => {
-    console.error(err);
-    return [];
-  }
-  );
+  const retrieveImages = async () => {
+    const imagesUrls: S3Object[] = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/api/photography`,
+      { cache: "no-store" }
+    )
+      .then((res) =>
+        res
+          .json()
+          .then((data: any[]) =>
+            data.map((d) => new S3Object(d.url, d.metadata))
+          )
+      )
+      .catch((err) => {
+        console.error(err);
+        return [];
+      });
+
+    imagesUrls.sort((a, b) => {
+      return (
+        Number(new Date(b.metadata.DateTimeOriginal)) -
+        Number(new Date(a.metadata.DateTimeOriginal))
+      );
+    });
+
+    return imagesUrls;
+  };
+
+  const imagesUrls = await retrieveImages();
 
   return (
     <main>
@@ -31,12 +51,7 @@ export default async function Photography() {
           </a>
         </div>
         {imagesUrls.map((image, index) => {
-          return (
-            <ImageContainer
-              key={`${index}-${image}`}
-              url={image as string}
-            />
-          );
+          return <ImageContainer key={`${index}-${image.url}`} s3Object={image} />;
         })}
       </div>
     </main>
