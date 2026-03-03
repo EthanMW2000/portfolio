@@ -2,17 +2,18 @@
   "work": [
     {
       "title": "Software Engineer",
-      "employer": "Invista",
-      "duration": "July 2023 - Present",
+      "employer": "INVISTA",
+      "duration": "July 2023 - Current",
       "descriptions": [
-        "Leading development on a digital twin service for Invista manufacturing plants",
-        "Collaborated with operators to design a responsive and interactive digital twin in Next.js",
-        "Implemented RBAC to ensure security of Invista's intellectual property",
-        "Interfaced with webhooks to keep our graph database and digital twin consistent across data manipulations"
+        "Lead development on the Digital Twin innovation project within INVISTA",
+        "Created architecture diagrams that facilitated scalable and maintainable software solutions",
+        "Collaborated with Operators to design an application that empowers them and aids their efficiency",
+        "Connected with Project Managers and Site Champions to plan out timelines for high priority features"
       ],
       "technologies": [
         "TypeScript",
         "React",
+        "Next.js",
         "Node.js",
         "Nest.js",
         "AWS",
@@ -24,15 +25,17 @@
       "employer": "StaffWise",
       "duration": "April 2022 - July 2023",
       "descriptions": [
-        "Designing and implementing a REST API in Node.js using TypeScript",
-        "Implementing UI designs using React and its ecosystem",
-        "Constructing and executing state-based database development in SQL Server"
+        "Enforcing TDD using Clean Architecture for maintainable and testable code",
+        "Constructing and executing state-based database development in Microsoft SQL Server",
+        "Implementing UI designs using React.js and REST API's in Node.js",
+        "Architecting resources and services in Microsoft Azure using Terraform",
+        "Collaborating with a team to guarantee continuous integration and deployment"
       ],
       "technologies": [
         "Node.js",
         "TypeScript",
         "React",
-        "MS SQL Server",
+        "Microsoft SQL Server",
         "Terraform",
         "Azure"
       ]
@@ -42,28 +45,27 @@
       "employer": "Nuvative",
       "duration": "April 2023 - July 2023",
       "descriptions": [
-        "Improving coverage on their microservice by more than 30%",
-        "Following DDD principles to improve the quality of the codebase",
-        "Transitioning legacy code from JQuery to React"
+        "Improved unit test coverage on multiple vital microservices by 20+%",
+        "Contributed to C# microservices designed around business domains, emphasizing clean architecture and scalable design",
+        "Followed Atomic Design principles to construct reusable React components for UI"
       ],
       "technologies": [
         "TypeScript",
         "React",
-        "MS SQL Server",
+        "Microsoft SQL Server",
         "C#",
-        ".NET",
-        "JQuery"
+        ".NET"
       ]
     },
     {
-      "title": "Developer Intern",
+      "title": "Software Developer Intern",
       "employer": "Pillr",
       "duration": "November 2022 - March 2023",
       "descriptions": [
-        "Implemented UI using Vue to provide a better user experience for the users.",
-        "Made use of event-driven architecture using RabbitMQ and Celery to produce and consume data."
+        "Implemented UI for our endpoint management process flow in Vue.js",
+        "Handled third party webhooks to ingest data using Python and Celery"
       ],
-      "technologies": ["Vue", "TypeScript", "RabbitMQ", "Celery", "Python"]
+      "technologies": ["Vue", "TypeScript", "Python", "Celery"]
     }
   ],
   "projects": [
@@ -71,9 +73,9 @@
       "name": "Astrorpheus",
       "type": "Web Application",
       "description": [
-        "Designed and implemented 3D point cloud viewer",
+        "Designed and implemented 3D point cloud viewer using React Three Fiber",
         "Retrieved and served 3D point cloud models and audio files from S3",
-        "Collaborated with a team on a strict deadline to produce a project that won 1st place in the NASA Space Apps Challenge"
+        "Collaborated with a team on a strict deadline and won 1st in the NASA Spaces App Challenge in Wichita, KS"
       ],
       "technologies": [
         "TypeScript",
@@ -84,21 +86,15 @@
     {
       "name": "GymArc",
       "type": "Mobile Application",
-      "description": "A cross-platform workout tracking app that is designed to provide a better user experience for gym-goers. It allows users to track their progress and share their workouts with others.",
+      "description": [
+        "Implemented UI in React Native and GraphQL API in Go"
+      ],
       "technologies": [
         "React Native",
         "TypeScript",
-        "WatermelonDB",
         "GraphQL",
-        "Go",
-        "PostgreSQL"
+        "Go"
       ]
-    },
-    {
-      "name": "MediPort",
-      "type": "iOS Application",
-      "description": "A medical passport mobile application that provides users a convenient way to store their medical information. It allows users to also track their prescriptions and medical appointments.",
-      "technologies": ["Swift", "Core Data"]
     }
   ]
 }
