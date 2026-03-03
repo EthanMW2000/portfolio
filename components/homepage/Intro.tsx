@@ -1,49 +1,56 @@
-import { ChevronRight } from "../icons/ChevronRight";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export function Intro() {
   return (
-    <div id="home" className="flex flex-row justify-center">
-      <div className="flex flex-col justify-center min-h-screen">
-        <div className="pb-4">
-          <h2 className="text-2xl">
-            Welcome
-            <br />
-            my name is
-          </h2>
-          <h1 className="text-6xl font-medium">Ethan.</h1>
-        </div>
-        <div className="pb-4">
-          <h2 className="text-2xl">I am a</h2>
-          <h1 className="text-6xl font-medium">Software Engineer.</h1>
-        </div>
-        <p className="text-lg">
-          I specialize in
-          <span className="font-bold"> full stack </span> development with
-          <span className="font-bold"> web</span> and
-          <span className="font-bold"> mobile</span> applications.
-        </p>
-        <div className="flex flex-col xs:flex-row gap-4 mt-6">
-          <div className="flex flex-row">
-            <a
-              href={"#about"}
-              className="text-md md:text-lg bg-primary-button rounded-lg pl-4 pr-2 py-2 text-secondary flex flex-row justify-center items-center hover:bg-secondary-button transition duration-300 ease-in-out"
-            >
-              Discover More
-              <ChevronRight width={24} height={24} fill="#f1f1ef" />
-            </a>
-          </div>
+    <Box
+      id="home"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(170deg, #1b2541 0%, #0f1729 100%)",
+        color: "#fff",
+      }}
+    >
+      <Container maxWidth="md">
+        <Typography variant="h1" sx={{ color: "#fff", mb: 1 }}>
+          Ethan Wells
+        </Typography>
+        <Typography variant="h2" sx={{ color: "rgba(255,255,255,0.7)", mb: 3 }}>
+          Software Engineer
+        </Typography>
 
-          <div className="flex flex-row">
-            <a
-              href={"/photography"}
-              className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center hover:bg-primary-button transition duration-300 ease-in-out"
-            >
-              Photography Portfolio
-              <ChevronRight width={24} height={24} fill="#1b2541" />
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+        <Typography
+          variant="body1"
+          sx={{ fontSize: "1.125rem", maxWidth: 560, color: "rgba(255,255,255,0.8)" }}
+        >
+          I build across the <strong>full stack</strong> — from frontend
+          interfaces to APIs, databases, and <strong>cloud infrastructure</strong>.
+        </Typography>
+
+        <Button
+          variant="contained"
+          href="#about"
+          endIcon={<ArrowForwardIcon />}
+          size="large"
+          sx={{
+            mt: 4,
+            bgcolor: "rgba(255,255,255,0.15)",
+            color: "#fff",
+            border: "1px solid rgba(255,255,255,0.25)",
+            "&:hover": {
+              bgcolor: "rgba(255,255,255,0.25)",
+            },
+          }}
+        >
+          Discover More
+        </Button>
+      </Container>
+    </Box>
   );
 }
