@@ -1,25 +1,102 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Drawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+
+const routes = ["About", "Experience", "Contact"];
+
 export function NavBar() {
-  const routes = ["About", "Experience", "Contact"];
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="flex flex-row w-full justify-between backdrop-blur-md items-center px-4 md:px-8 shadow-md text-primary">
-      <a href="#home">
-        <Image alt='logo' src='/logo.svg' width={48} height={48} className='my-auto ml-4' />
-      </a>
-      <div className="flex-1 flex flex-row-reverse w-full h-20">
-        {routes.reverse().map((route) => (
-          <div className="mx-2 my-auto" key={route}>
-            <a
+    <AppBar position="fixed" elevation={0}>
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
+        <a href="#home">
+          <Image alt="logo" src="/logo.svg" width={40} height={40} />
+        </a>
+
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
+          {routes.map((route) => (
+            <Button
+              key={route}
               href={`#${route.toLowerCase()}`}
-              className="group transition duration-300 hover:text-primary-button text-lg font-semibold"
+              sx={{
+                color: "text.primary",
+                fontSize: "1rem",
+                fontWeight: 600,
+                position: "relative",
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: 6,
+                  left: "50%",
+                  width: 0,
+                  height: 2,
+                  bgcolor: "secondary.main",
+                  transition: "all 0.3s ease",
+                  transform: "translateX(-50%)",
+                },
+                "&:hover::after": {
+                  width: "60%",
+                },
+                "&:hover": {
+                  color: "secondary.main",
+                  bgcolor: "transparent",
+                },
+              }}
             >
               {route}
-              <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-primary-button"></span>
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
+            </Button>
+          ))}
+        </Box>
+
+        <IconButton
+          onClick={() => setDrawerOpen(true)}
+          sx={{ display: { xs: "flex", md: "none" }, color: "text.primary" }}
+        >
+          <MenuIcon />
+        </IconButton>
+
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <Box sx={{ width: 260, pt: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", px: 2 }}>
+              <IconButton onClick={() => setDrawerOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <List>
+              {routes.map((route) => (
+                <ListItemButton
+                  key={route}
+                  component="a"
+                  href={`#${route.toLowerCase()}`}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  <ListItemText
+                    primary={route}
+                    primaryTypographyProps={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        </Drawer>
+      </Toolbar>
+    </AppBar>
   );
 }

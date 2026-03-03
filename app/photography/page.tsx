@@ -1,4 +1,8 @@
-import { ChevronRight } from "@/components/icons/ChevronRight";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { ImageContainer } from "@/components/photography/ImageContainer";
 import Sidebar from "@/components/photography/Sidebar";
 import { S3Object } from "@/types";
@@ -22,7 +26,8 @@ export default async function Photography() {
       });
 
     imagesUrls.sort((a, b) => {
-      if(!a.metadata.DateTimeOriginal || !b.metadata.DateTimeOriginal) return 0;
+      if (!a.metadata?.DateTimeOriginal || !b.metadata?.DateTimeOriginal)
+        return 0;
       return (
         Number(new Date(b.metadata.DateTimeOriginal)) -
         Number(new Date(a.metadata.DateTimeOriginal))
@@ -35,28 +40,40 @@ export default async function Photography() {
   const imagesUrls = await retrieveImages();
 
   return (
-    <main>
+    <Box component="main">
       <Sidebar />
-      <div className="flex flex-col justify-center items-center mt-10">
-        <h1 className="text-4xl text-primary">
+      <Container
+        maxWidth="lg"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          pt: 10,
+          pb: 6,
+        }}
+      >
+        <Typography variant="h3" sx={{ mb: 2, textAlign: "center" }}>
           My photography showcase is currently being built!
-        </h1>
-        <h3 className="text-xl text-primary-button mt-10">Check back soon</h3>
-        <div className="flex flex-row">
-          <a
-            href={"/"}
-            className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center hover:bg-primary-button transition duration-300 ease-in-out"
-          >
-            Home
-            <ChevronRight width={24} height={24} fill="#1b2541" />
-          </a>
-        </div>
-        {imagesUrls.map((image, index) => {
-          return (
+        </Typography>
+        <Typography variant="body1" sx={{ color: "secondary.main", mb: 4 }}>
+          Check back soon
+        </Typography>
+        <Button
+          variant="outlined"
+          color="secondary"
+          href="/"
+          endIcon={<ArrowForwardIcon />}
+          size="large"
+          sx={{ mb: 6 }}
+        >
+          Home
+        </Button>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "center" }}>
+          {imagesUrls.map((image, index) => (
             <ImageContainer key={`${index}-${image.url}`} s3Object={image} />
-          );
-        })}
-      </div>
-    </main>
+          ))}
+        </Box>
+      </Container>
+    </Box>
   );
 }

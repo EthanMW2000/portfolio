@@ -1,183 +1,122 @@
-"use client";
-import skills from "../../assets/skills.json";
-import Marquee from "react-fast-marquee";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import "/app/globals.css";
-import { initialTabs as tabs } from "./tabs";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
+import skills from "@/assets/skills.json";
+
+const skillCategories = [
+  { label: "Languages", items: skills.languages },
+  { label: "Frontend", items: skills.frontend },
+  { label: "Backend", items: skills.backend },
+  { label: "Database", items: skills.database },
+  { label: "Infrastructure", items: skills.infrastructure },
+  { label: "Other", items: skills.other },
+];
 
 export function About() {
-  const [selectedTab, setSelectedTab] = useState(tabs[0]);
-
   return (
-    <div
-      id="about"
-      className="flex flex-row justify-center min-h-screen pt-24 xl:pt-16"
-    >
-      <div className="flex flex-col justify-center content-center space-y-8">
-        <h1 className="text-left text-4xl">About Me</h1>
-        <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:space-x-24 justify-between">
-          <div className="flex flex-col justify-center max-w-xs md:max-w-lg">
-            <div className="flex flex-col space-y-4 text-lg text-justify">
-              <p>
-                Hello! My name is Ethan Wells and I am a software engineer. I
-                have experience with a variety of languages and frameworks, and
-                fullstack development. Working on the forefront of technology is
-                something I am passionate about. I am always looking for new
-                ways to innovate and improve my skills.
-              </p>
-              <p>
-                I graduated from Wichita State University with a Bachelor of
-                Science in Computer Science. Currently, I am working as a
-                software engineer with Invista, where I am helping to drive
-                innovation within their operations.
-              </p>
-              <p>
-                During my spare moments I have been devoting my time to working
-                with
-                <b> Go</b> and <b>Swift</b>. Outside of programming I enjoy
-                <a
-                  href="/photography"
-                  className="text-primary-button font-bold hover:underline animate-pulse"
+    <Box id="about" sx={{ py: { xs: 10, md: 14 } }}>
+      <Container maxWidth="lg">
+        <Typography variant="h2" sx={{ mb: 6 }}>
+          About Me
+        </Typography>
+
+        <Grid container spacing={6} sx={{ mb: 8 }}>
+          <Grid size={{ xs: 12, md: 7 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+              <Typography variant="body1">
+                I&apos;m a software engineer who builds across the full stack — from
+                the interfaces people interact with to the APIs, databases, and cloud
+                infrastructure behind them. I&apos;ve worked across industries
+                including manufacturing and workforce management, and I bring the same
+                approach everywhere: understand the problem deeply, then build the
+                simplest thing that solves it well.
+              </Typography>
+              <Typography variant="body1">
+                I graduated from Wichita State University with a Bachelor of Science
+                in Computer Science. Currently, I&apos;m a software engineer at
+                INVISTA, where I lead development on a Digital Twin innovation project
+                that helps operators make better decisions on the plant floor.
+              </Typography>
+              <Typography variant="body1">
+                Outside of work, you&apos;ll find me behind the camera or working on
+                side projects.
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 5 }} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box
+              sx={{
+                borderRadius: 3,
+                overflow: "hidden",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                width: 280,
+                height: 280,
+                position: "relative",
+              }}
+            >
+              <Image
+                alt="A headshot of Ethan Wells"
+                src="/professional-headshot.jpeg"
+                fill
+                style={{ objectFit: "cover" }}
+                priority
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            mb: 8,
+            p: 2.5,
+            borderRadius: 2,
+            bgcolor: "background.paper",
+            border: 1,
+            borderColor: "divider",
+          }}
+        >
+          <SchoolOutlinedIcon sx={{ color: "secondary.main", fontSize: 28 }} />
+          <Box>
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              Bachelor of Science in Computer Science
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              Wichita State University — Fall 2023
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box>
+          <Typography variant="h3" sx={{ mb: 4 }}>
+            Skills
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            {skillCategories.map((category) => (
+              <Box key={category.label}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 600, mb: 1, color: "text.secondary", textTransform: "uppercase", letterSpacing: 1 }}
                 >
-                  {" "}
-                  photography
-                </a>
-                , anime, and games.
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <Image
-              className="rounded-xl border-accent border-2 shadow-xl backdrop-blur-lg hover:shadow-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
-              alt="A headshot of Ethan Wells"
-              src="/professional-headshot.jpeg"
-              width={275}
-              height={275}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col lg:flex-row mb-24 lg:space-x-8 justify-between items-center">
-          <div className="flex flex-col justify-between max-w-xs md:max-w-lg">
-            <div className="flex flex-col space-y-4 text-lg">
-              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
-                {skills.languages.map((skill) => (
-                  <div key={skill} className=" m-2 p-2 rounded-lg">
-                    <h2 className="text-2xl">{skill}</h2>
-                  </div>
-                ))}
-              </Marquee>
-              <Marquee
-                direction="right"
-                speed={65}
-                pauseOnHover={true}
-                autoFill={true}
-              >
-                {skills.frontend.map((skill) => (
-                  <div key={skill} className=" m-2 p-2 rounded-lg">
-                    <h2 className="text-2xl">{skill}</h2>
-                  </div>
-                ))}
-              </Marquee>
-              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
-                {skills.backend.map((skill) => (
-                  <div key={skill} className=" m-2 p-2 rounded-lg">
-                    <h2 className="text-2xl">{skill}</h2>
-                  </div>
-                ))}
-              </Marquee>
-              <Marquee
-                direction="right"
-                speed={65}
-                pauseOnHover={true}
-                autoFill={true}
-              >
-                {skills.database.map((skill) => (
-                  <div key={skill} className=" m-2 p-2 rounded-lg">
-                    <h2 className="text-2xl">{skill}</h2>
-                  </div>
-                ))}
-              </Marquee>
-              <Marquee speed={65} pauseOnHover={true} autoFill={true}>
-                {skills.devops.map((skill) => (
-                  <div key={skill} className=" m-2 p-2 rounded-lg">
-                    <h2 className="text-2xl">{skill}</h2>
-                  </div>
-                ))}
-              </Marquee>
-            </div>
-          </div>
-          <div className="flex flex-col h-fit shadow-md backdrop-blur-md w-full rounded-lg overflow-hidden">
-            <nav className="backdrop-blur-sm">
-              <ul className="backdrop-blur-sm">
-                {tabs.map((item) => (
-                  <li
-                    key={item.label}
-                    className={item === selectedTab ? "selected" : ""}
-                    onClick={() => setSelectedTab(item)}
-                  >
-                    {`${item.icon} ${item.label}`}
-                    {item === selectedTab ? (
-                      <motion.div className="underline" layoutId="underline" />
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <main>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={selectedTab ? selectedTab.label : "empty"}
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -10, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-4"
-                >
-                  {selectedTab
-                    ? selectedTab.list.map((info) => {
-                        return selectedTab.label === "Games" ? (
-                          <div
-                            key={info.label}
-                            className="flex flex-row w-full items-center text-left justify-between h-[75px] border-b-2 border-accent"
-                          >
-                            <Image
-                              alt={info.label}
-                              src={info.icon}
-                              height={100}
-                              width={75}
-                              loading="eager"
-                            />
-                            <p className="md:text-lg text-left text-sm">
-                              {info.label}
-                            </p>
-                          </div>
-                        ) : (
-                          <div
-                            key={info.label}
-                            className="flex flex-row w-full items-center justify-between h-[75px] border-b-2 border-accent"
-                          >
-                            <Image
-                              alt={info.label}
-                              src={info.icon}
-                              height={75}
-                              width={140}
-                              loading="eager"
-                            />
-                            <p className="md:text-lg text-left text-sm">
-                              {info.label}
-                            </p>
-                          </div>
-                        );
-                      })
-                    : ""}
-                </motion.div>
-              </AnimatePresence>
-            </main>
-          </div>
-        </div>
-      </div>
-    </div>
+                  {category.label}
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {category.items.map((skill) => (
+                    <Chip key={skill} label={skill} size="medium" />
+                  ))}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 }

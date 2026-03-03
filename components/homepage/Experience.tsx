@@ -1,122 +1,102 @@
-"use client";
-import experiences from "../../assets/experience.json";
-import { motion, useTransform, useScroll, animate } from "framer-motion";
-import { useState } from "react";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import experiences from "@/assets/experience.json";
 
 export function Experience() {
-  const [dragged, setDragged] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
-    <div
-      id="experience"
-      className="min-h-screen flex flex-row justify-center items-center pt-24"
-    >
-      <div className="flex flex-col justify-center items-center space-y-10">
-        <h1 className="text-4xl text-left">Experience</h1>
-        <motion.button
-          onDrag={() => setDragged(true)}
-          drag
-          className="invisible md:visible md:h text-sm font-bold"
-        >
-          {dragged ? "NOT ME!!" : "*try dragging*"}
-        </motion.button>
-        <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
-          {experiences.work.map((work) => (
-            <motion.div
-              key={work.employer}
-              whileHover={{ scale: 1.1 }}
-              drag
-              dragConstraints={{
-                left: -300,
-                right: 300,
-                top: -300,
-                bottom: 300,
-              }}
-              className="flex flex-col rounded-xl w-[300px] h- md:w-[500px] 2xl:w-[700px] xl:w-[600px] p-3 m-3 backdrop-blur-sm shadow-md"
-            >
-              <h2 className="text-xl md:text-3xl text-center py-4">
-                {work.title}
-              </h2>
+    <Box id="experience" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.paper" }}>
+      <Container maxWidth="lg">
+        <Typography variant="h2" sx={{ mb: 6 }}>
+          Experience
+        </Typography>
 
-              <h3 className="text-lg md:text-2xl">{work.employer}</h3>
-              {work.descriptions.map((desc) => {
-                return (
-                  <p key={desc} className="text-md md:text-lg">{`- ${desc}`}</p>
-                );
-              })}
-              <div className="flex flex-wrap flex-row justify-stretch">
-                {work.technologies.map((tech) => {
-                  return (
-                    <motion.p
-                      transition={{
-                        duration: 2,
-                        ease: "easeInOut",
-                        times: [0, 0.2, 0.5, 0.8, 1],
-                        repeat: Infinity,
-                        repeatDelay: 2,
-                      }}
-                      animate={{
-                        scale: [1, 1.25, 1.25, 1, 1],
-                      }}
-                      key={tech}
-                      className="text-md md:text-lg px-2 my-1 mx-3 bg-secondary-button rounded-lg"
-                    >
-                      {tech}
-                    </motion.p>
-                  );
-                })}
-              </div>
-            </motion.div>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 4, mb: 10 }}>
+          {experiences.work.map((work, index) => (
+            <Card key={work.employer} sx={{ position: "relative", overflow: "visible" }}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  left: { xs: 24, md: 40 },
+                  top: -12,
+                  bgcolor: "secondary.main",
+                  color: "#fff",
+                  px: 2,
+                  py: 0.5,
+                  borderRadius: 2,
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                }}
+              >
+                {work.duration}
+              </Box>
+              <CardContent sx={{ p: { xs: 3, md: 4 }, pt: { xs: 4, md: 5 } }}>
+                <Typography variant="h4" sx={{ mb: 0.5 }}>
+                  {work.title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary", mb: 2, fontWeight: 500 }}>
+                  {work.employer}
+                </Typography>
+                <Box component="ul" sx={{ pl: 2.5, mb: 2.5 }}>
+                  {work.descriptions.map((desc) => (
+                    <Typography component="li" variant="body2" key={desc} sx={{ mb: 0.5, color: "text.secondary" }}>
+                      {desc}
+                    </Typography>
+                  ))}
+                </Box>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {work.technologies.map((tech) => (
+                    <Chip key={tech} label={tech} size="small" />
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
           ))}
-        </div>
-        <h1 className="text-4xl">Projects</h1>
-        <div className="flex flex-col xl:flex-row flex-wrap justify-center items-center space-y-6 xl:space-y-0 text-lg">
+        </Box>
+
+        <Typography variant="h2" sx={{ mb: 6 }}>
+          Projects
+        </Typography>
+
+        <Grid container spacing={3}>
           {experiences.projects.map((project) => (
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              drag
-              dragConstraints={{
-                left: -300,
-                right: 300,
-                top: -300,
-                bottom: 300,
-              }}
-              key={project.name}
-              className="flex flex-col rounded-xl w-[300px] h-full md:w-[500px] 2xl:w-[700px] xl:w-[600px] p-3 m-3 backdrop-blur-sm shadow-md"
-            >
-              <h2 className="text-xl md:text-3xl text-center py-4">
-                {project.name}
-              </h2>
-              <h3 className="text-lg md:text-2xl">{project.type}</h3>
-              <p className="text-md md:text-lg">{project.description}</p>
-              <div className="flex flex-wrap flex-row justify-stretch">
-                {project.technologies && project.technologies.map((tech) => {
-                  return (
-                    <motion.p
-                      transition={{
-                        duration: 2,
-                        ease: "easeInOut",
-                        times: [0, 0.2, 0.5, 0.8, 1],
-                        repeat: Infinity,
-                        repeatDelay: 2,
-                      }}
-                      animate={{
-                        scale: [1, 1.25, 1.25, 1, 1],
-                      }}
-                      key={tech}
-                      className="text-md md:text-lg px-2 my-1 mx-3 bg-secondary-button rounded-lg"
-                    >
-                      {tech}
-                    </motion.p>
-                  );
-                })}
-              </div>
-            </motion.div>
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.name}>
+              <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                <CardContent sx={{ p: { xs: 3, md: 4 }, flex: 1 }}>
+                  <Typography variant="h4" sx={{ mb: 0.5 }}>
+                    {project.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary", mb: 2, fontWeight: 500 }}>
+                    {project.type}
+                  </Typography>
+                  {Array.isArray(project.description) ? (
+                    <Box component="ul" sx={{ pl: 2.5, mb: 2.5 }}>
+                      {project.description.map((desc) => (
+                        <Typography component="li" variant="body2" key={desc} sx={{ mb: 0.5, color: "text.secondary" }}>
+                          {desc}
+                        </Typography>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" sx={{ color: "text.secondary", mb: 2.5 }}>
+                      {project.description}
+                    </Typography>
+                  )}
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: "auto" }}>
+                    {project.technologies?.map((tech) => (
+                      <Chip key={tech} label={tech} size="small" />
+                    ))}
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
           ))}
-        </div>
-      </div>
-    </div>
+        </Grid>
+      </Container>
+    </Box>
   );
 }

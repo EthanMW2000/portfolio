@@ -1,7 +1,8 @@
 {
-  "languages": ["TypeScript", "Go", "Python", "Swift", "C#"],
-  "frontend": ["React", "Vue", "React Native", "Next.js"],
-  "backend": ["Node.js", "Nest.js", "Express", "RESTful API", ".NET"],
-  "database": ["DynamoDB", "MSSQL Server", "PostgreSQL"],
-  "devops": ["AWS", "Docker", "Azure", "Terraform"]
+  "languages": ["TypeScript", "JavaScript", "Python", "C#"],
+  "frontend": ["React", "Next.js", "Vue", "HTML", "CSS"],
+  "backend": ["FastAPI", "Node.js", "Express.js", "Nest.js", ".NET"],
+  "database": ["Neo4j", "DynamoDB", "Microsoft SQL Server", "PostgreSQL"],
+  "infrastructure": ["AWS", "Azure", "Terraform"],
+  "other": ["Git", "CI/CD", "DevOps", "Agile"]
 }
