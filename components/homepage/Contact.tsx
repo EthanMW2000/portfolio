@@ -1,52 +1,74 @@
-import { ChevronRight } from "../icons/ChevronRight";
-import { EmailIcon } from "../icons/EmailIcon";
-import { GithubIcon } from "../icons/GithubIcon";
-import { LinkedInIcon } from "../icons/LinkedInIcon";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Stack from "@mui/material/Stack";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 
 export function Contact() {
   return (
-    <div
-      id="contact"
-      className="flex flex-row justify-center w-full min-h-screen"
-    >
-      <div className="flex flex-col justify-center items-center w-full space-y-10">
-        <div className="flex flex-col xl:flex-row w-11/12 justify-center items-center space-y-6 xl:space-y-0 xl:space-x-6 text-lg">
-          <div className="flex flex-col rounded-xl px-4 space-y-6">
-            <h2 className="text-xl md:text-3xl text-center py-4">{`Let's Talk`}</h2>
-            <p className="text-md md:text-lg">
-              If you have any questions or would like to get in touch, please
-              feel free to contact me using any of these links and connect with
-              me.
-            </p>
-            <div className="flex flex-row justify-center items-center space-x-4 text-secondary-button">
-              <EmailIcon />
-              <LinkedInIcon />
-              <GithubIcon />
-            </div>
-            <div className="flex flex-row justify-center sm:gap-4 gap-2">
-              <div className="flex flex-row justify-center">
-                <a
-                  href={"Wells-Ethan.pdf"}
-                  target={"_blank"}
-                  rel="noreferrer"
-                  className="text-md md:text-lg bg-primary-button rounded-lg px-4 py-2 text-neutral-50 transition duration-300 ease-in-out hover:bg-secondary-button flex flex-row justify-center items-center"
-                >
-                  Resume
-                </a>
-              </div>
-              <div className="flex flex-row">
-                <a
-                  href={"/photography"}
-                  className="text-md md:text-lg bg-secondary-button rounded-lg pl-4 pr-2 py-2 text-primary flex flex-row justify-center items-center hover:bg-primary-button transition duration-300 ease-in-out"
-                >
-                  Photography Portfolio
-                  <ChevronRight width={24} height={24} fill="#1b2541" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box id="contact" sx={{ py: { xs: 10, md: 14 } }}>
+      <Container maxWidth="sm" sx={{ textAlign: "center" }}>
+        <Typography variant="h2" sx={{ mb: 3 }}>
+          Let&apos;s Talk
+        </Typography>
+
+        <Typography variant="body1" sx={{ color: "text.secondary", mb: 4 }}>
+          If you have any questions or would like to get in touch, feel free to
+          reach out through any of the links below.
+        </Typography>
+
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 5 }}>
+          <Tooltip title="Email">
+            <IconButton
+              component="a"
+              href="mailto:ethanmw2000@gmail.com"
+              sx={{ color: "text.primary", "&:hover": { color: "secondary.main" } }}
+            >
+              <EmailOutlinedIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="LinkedIn">
+            <IconButton
+              component="a"
+              href="https://www.linkedin.com/in/ethan-wells00/"
+              target="_blank"
+              rel="noreferrer"
+              sx={{ color: "text.primary", "&:hover": { color: "secondary.main" } }}
+            >
+              <LinkedInIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="GitHub">
+            <IconButton
+              component="a"
+              href="https://github.com/EthanMW2000"
+              target="_blank"
+              rel="noreferrer"
+              sx={{ color: "text.primary", "&:hover": { color: "secondary.main" } }}
+            >
+              <GitHubIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          href="Wells-Ethan.pdf"
+          target="_blank"
+          rel="noreferrer"
+          startIcon={<DescriptionOutlinedIcon />}
+          size="large"
+        >
+          Resume
+        </Button>
+      </Container>
+    </Box>
   );
 }
