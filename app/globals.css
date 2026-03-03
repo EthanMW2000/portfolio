@@ -1,101 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-nav {
-  backdrop-filter: blur(4px);
-  padding: 5px 5px 0;
-  border-radius: 10px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 1px solid #eeeeee;
-  height: fit-content;
-}
-
-.tabs {
-  flex-grow: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  flex-wrap: nowrap;
-  width: 100%;
-}
-
-main {
-  font-size: 128px;
-  flex-grow: 1;
-  user-select: none;
-  padding: 20px;
-  justify-content: space-between;
-}
-
-ul,
-li {
-  list-style: none;
-  padding: 0;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-weight: 500;
-  font-size: 14px;
+  padding: 0;
 }
 
-ul {
-  display: flex;
-  width: 100%;
+html,
+body {
+  overscroll-behavior: none;
 }
 
-li {
-  border-radius: 5px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  width: 100%;
-  padding: 10px 15px;
-  position: relative;
-  backdrop-filter: blur(4px);
-  cursor: pointer;
-  height: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  position: relative;
-  user-select: none;
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.underline {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  color: #e3742441;
-  background: #e37224;
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #0f1117;
+  }
 }
 
-li.selected {
-  background: #9bd0d443;
+@media (prefers-color-scheme: light) {
+  html {
+    background-color: #fafafa;
+  }
 }
 
-li button {
-  width: 20px;
-  height: 20px;
-  border: 0;
-  background: #fff;
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  stroke: #000;
-  margin-left: 10px;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 300px;
-  background: #fff;
+a {
+  color: inherit;
+  text-decoration: none;
 }
