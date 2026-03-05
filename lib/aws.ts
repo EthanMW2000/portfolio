@@ -1,6 +1,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { LambdaClient } from "@aws-sdk/client-lambda";
 import { awsCredentialsProvider } from "@vercel/functions/oidc";
 
 function buildCredentials() {
@@ -23,6 +24,13 @@ export function buildDynamoClient(): DynamoDBDocumentClient {
     credentials: buildCredentials(),
   });
   return DynamoDBDocumentClient.from(client);
+}
+
+export function buildLambdaClient(): LambdaClient {
+  return new LambdaClient({
+    region: process.env.AWS_REGION,
+    credentials: buildCredentials(),
+  });
 }
 
 export const bucket = process.env.S3_BUCKET_NAME!;
