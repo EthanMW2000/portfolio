@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getAllFingerprints,
-  getRecord,
-  getTrack,
-  findTrackByMbid,
-  updateTrackFingerprint,
-} from "@/lib/vinyl";
-import { decodeChromaprint, compareFingerprints } from "@/lib/fingerprint";
+import { getRecord, findTrackByMbid } from "@/lib/vinyl";
 import { lookupByFingerprint } from "@/lib/acoustid";
 
 export async function POST(request: NextRequest) {
@@ -22,45 +15,34 @@ export async function POST(request: NextRequest) {
       duration: number;
     };
 
-    if (!fingerprint) {
+    if (!fingerprint || !duration) {
       return NextResponse.json(
-        { error: "Missing fingerprint" },
+        { error: "Missing fingerprint or duration" },
         { status: 400 }
       );
     }
 
-    const query = decodeChromaprint(fingerprint);
-
-    const candidates = await getAllFingerprints();
-    if (candidates.length > 0) {
-      const localMatch = compareFingerprints(query, candidates);
-      if (localMatch) {
-        const [record, track] = await Promise.all([
-          getRecord(localMatch.recordId),
-          getTrack(localMatch.trackId),
-        ]);
-        return NextResponse.json({
-          match: buildMatchResponse(record, track, localMatch.similarity),
-          source: "local",
-        });
-      }
-    }
-
     const acoustIdMatches = await lookupByFingerprint(fingerprint, duration);
 
-    for (const aMatch of acoustIdMatches) {
-      const track = await findTrackByMbid(aMatch.recordingMbid);
+    for (const match of acoustIdMatches) {
+      const track = await findTrackByMbid(match.recordingMbid);
       if (!track) continue;
 
       const record = await getRecord(track.recordId);
 
-      updateTrackFingerprint(track.id, query).catch((err) =>
-        console.error(`Failed to save fingerprint for ${track.title}:`, err)
-      );
-
       return NextResponse.json({
-        match: buildMatchResponse(record, track, aMatch.score),
-        source: "acoustid",
+        match: {
+          similarity: match.score,
+          track: { id: track.id, title: track.title, trackNumber: track.trackNumber },
+          record: record
+            ? {
+                id: record.id,
+                title: record.title,
+                artist: record.artist,
+                coverUrl: record.coverUrl,
+              }
+            : null,
+        },
       });
     }
 
@@ -72,25 +54,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-function buildMatchResponse(
-  record: { id: string; title: string; artist: string; coverUrl: string | null } | null,
-  track: { id: string; title: string; trackNumber: number } | null,
-  similarity: number
-) {
-  return {
-    similarity,
-    track: track
-      ? { id: track.id, title: track.title, trackNumber: track.trackNumber }
-      : null,
-    record: record
-      ? {
-          id: record.id,
-          title: record.title,
-          artist: record.artist,
-          coverUrl: record.coverUrl,
-        }
-      : null,
-  };
 }

@@ -51,7 +51,6 @@ export interface VinylTrack {
   discNumber: number;
   duration: number | null;
   mbid: string | null;
-  fingerprint: number[] | null;
 }
 
 export interface VinylRecordWithTracks extends VinylRecord {

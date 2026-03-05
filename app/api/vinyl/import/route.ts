@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
       discNumber: t.discNumber,
       duration: t.duration,
       mbid: t.recordingMbid,
-      fingerprint: null,
     }));
 
     const record: VinylRecord = {
