@@ -1,4 +1,4 @@
-import { HeadObjectCommand, ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import sharp from "sharp";
 import exifr from "exifr";
@@ -93,15 +93,6 @@ function emptyExif(): ExifData {
     iso: null,
     dateTaken: null,
   };
-}
-
-export async function objectExists(key: string): Promise<boolean> {
-  try {
-    await s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export async function getUploadPresignedUrl(key: string): Promise<string> {

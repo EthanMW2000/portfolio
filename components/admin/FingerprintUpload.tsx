@@ -15,20 +15,16 @@ import {
   TableRow,
   Alert,
   IconButton,
-  TextField,
-  CircularProgress,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { VinylRecordWithTracks, VinylTrack } from "@/types";
 
 interface TrackUploadState {
   file: File | null;
-  youtubeUrl: string;
-  status: "idle" | "uploading" | "fetching" | "done" | "error";
+  status: "idle" | "uploading" | "done" | "error";
   progress: number;
   error?: string;
 }
@@ -43,12 +39,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
   >(() => {
     const initial: Record<string, TrackUploadState> = {};
     for (const track of record.tracks) {
-      initial[track.id] = {
-        file: null,
-        youtubeUrl: "",
-        status: "idle",
-        progress: 0,
-      };
+      initial[track.id] = { file: null, status: "idle", progress: 0 };
     }
     return initial;
   });
@@ -58,13 +49,6 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
     setTrackStates((prev) => ({
       ...prev,
       [trackId]: { ...prev[trackId], file, status: "idle", progress: 0 },
-    }));
-  }
-
-  function handleYoutubeUrlChange(trackId: string, url: string) {
-    setTrackStates((prev) => ({
-      ...prev,
-      [trackId]: { ...prev[trackId], youtubeUrl: url },
     }));
   }
 
@@ -132,62 +116,6 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
     }
   }
 
-  async function fetchFromYoutube(track: VinylTrack) {
-    const state = trackStates[track.id];
-    if (!state?.youtubeUrl) return;
-
-    setTrackStates((prev) => ({
-      ...prev,
-      [track.id]: { ...prev[track.id], status: "fetching", progress: 0 },
-    }));
-
-    try {
-      const res = await fetch("/api/vinyl/fingerprint/youtube", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          trackId: track.id,
-          youtubeUrl: state.youtubeUrl,
-        }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Request failed: ${res.status}`);
-      }
-
-      const maxAttempts = 40;
-      for (let i = 0; i < maxAttempts; i++) {
-        await new Promise((r) => setTimeout(r, 3000));
-
-        const poll = await fetch(
-          `/api/vinyl/fingerprint/youtube?trackId=${track.id}`,
-        );
-        if (!poll.ok) continue;
-
-        const { ready } = await poll.json();
-        if (ready) {
-          setTrackStates((prev) => ({
-            ...prev,
-            [track.id]: { ...prev[track.id], status: "done", progress: 100 },
-          }));
-          return;
-        }
-      }
-
-      throw new Error("Timed out waiting for audio processing");
-    } catch (err) {
-      setTrackStates((prev) => ({
-        ...prev,
-        [track.id]: {
-          ...prev[track.id],
-          status: "error",
-          error: err instanceof Error ? err.message : "Fetch failed",
-        },
-      }));
-    }
-  }
-
   async function uploadAll() {
     setError(null);
     const tracksWithFiles = record.tracks.filter(
@@ -204,31 +132,11 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
     }
   }
 
-  async function fetchAll() {
-    setError(null);
-    const tracksWithUrls = record.tracks.filter(
-      (t) =>
-        trackStates[t.id]?.youtubeUrl && trackStates[t.id]?.status !== "done",
-    );
-
-    if (tracksWithUrls.length === 0) {
-      setError("No YouTube URLs entered");
-      return;
-    }
-
-    for (const track of tracksWithUrls) {
-      await fetchFromYoutube(track);
-    }
-  }
-
-  const anyBusy = Object.values(trackStates).some(
-    (s) => s.status === "uploading" || s.status === "fetching",
+  const anyUploading = Object.values(trackStates).some(
+    (s) => s.status === "uploading",
   );
-  const anyFileReady = Object.values(trackStates).some(
+  const anyReady = Object.values(trackStates).some(
     (s) => s.file && s.status !== "done",
-  );
-  const anyUrlReady = Object.values(trackStates).some(
-    (s) => s.youtubeUrl && s.status !== "done",
   );
 
   return (
@@ -243,7 +151,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
         pt: { xs: 4, sm: 8 },
       }}
     >
-      <Box sx={{ width: "100%", maxWidth: 900 }}>
+      <Box sx={{ width: "100%", maxWidth: 700 }}>
         <Stack direction="row" alignItems="center" spacing={1} mb={3}>
           <IconButton href="/admin/vinyl" color="secondary">
             <ArrowBackIcon />
@@ -253,7 +161,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
             color="text.primary"
             sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
           >
-            Fingerprint Audio
+            Upload Audio
           </Typography>
         </Stack>
 
@@ -276,108 +184,70 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
             <TableBody>
               {record.tracks.map((track) => {
                 const state = trackStates[track.id];
-                const isBusy =
-                  state?.status === "uploading" ||
-                  state?.status === "fetching";
                 return (
                   <TableRow key={track.id}>
-                    <TableCell sx={{ width: 30, px: 0.5, verticalAlign: "top", pt: 2 }}>
+                    <TableCell sx={{ width: 30, px: 0.5 }}>
                       {track.trackNumber}
                     </TableCell>
-                    <TableCell sx={{ px: 0.5, verticalAlign: "top", pt: 2 }}>
+                    <TableCell sx={{ px: 0.5 }}>
                       <Typography variant="body2">{track.title}</Typography>
                     </TableCell>
-                    <TableCell>
-                      <Stack spacing={1}>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          {state?.status === "done" && (
-                            <CheckCircleIcon
-                              color="success"
-                              fontSize="small"
-                            />
-                          )}
-                          {state?.status === "error" && (
-                            <ErrorIcon color="error" fontSize="small" />
-                          )}
+                    <TableCell sx={{ width: 200 }}>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        {state?.status === "done" ? (
+                          <CheckCircleIcon
+                            color="success"
+                            fontSize="small"
+                          />
+                        ) : state?.status === "error" ? (
+                          <ErrorIcon color="error" fontSize="small" />
+                        ) : null}
 
-                          {state?.status === "uploading" && (
-                            <Box sx={{ flex: 1 }}>
-                              <LinearProgress
-                                variant="determinate"
-                                value={state.progress}
-                                color="secondary"
-                              />
-                            </Box>
-                          )}
-
-                          {state?.status === "fetching" && (
-                            <CircularProgress size={20} color="secondary" />
-                          )}
-
-                          {state?.file && !isBusy && (
-                            <Chip
-                              label={state.file.name}
-                              size="small"
-                              variant="outlined"
-                              color={
-                                state.status === "done"
-                                  ? "success"
-                                  : state.status === "error"
-                                    ? "error"
-                                    : "default"
-                              }
-                            />
-                          )}
-
-                          {!isBusy && (
-                            <Button
-                              component="label"
-                              size="small"
-                              variant="outlined"
+                        {state?.status === "uploading" && (
+                          <Box sx={{ flex: 1 }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={state.progress}
                               color="secondary"
-                              startIcon={<UploadFileIcon />}
-                            >
-                              {state?.file ? "Replace" : "File"}
-                              <input
-                                type="file"
-                                hidden
-                                accept="audio/*"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) handleFileSelect(track.id, file);
-                                  e.target.value = "";
-                                }}
-                              />
-                            </Button>
-                          )}
-                        </Stack>
+                            />
+                          </Box>
+                        )}
 
-                        {state?.status !== "done" && (
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <TextField
-                              size="small"
-                              placeholder="YouTube URL"
-                              value={state?.youtubeUrl ?? ""}
-                              onChange={(e) =>
-                                handleYoutubeUrlChange(track.id, e.target.value)
-                              }
-                              disabled={isBusy}
-                              sx={{ flex: 1, minWidth: 180 }}
-                              slotProps={{
-                                input: { sx: { fontSize: "0.8rem" } },
+                        {state?.file && state.status !== "uploading" && (
+                          <Chip
+                            label={state.file.name}
+                            size="small"
+                            variant="outlined"
+                            color={
+                              state.status === "done"
+                                ? "success"
+                                : state.status === "error"
+                                  ? "error"
+                                  : "default"
+                            }
+                          />
+                        )}
+
+                        {state?.status !== "uploading" && (
+                          <Button
+                            component="label"
+                            size="small"
+                            variant="outlined"
+                            color="secondary"
+                            startIcon={<UploadFileIcon />}
+                          >
+                            {state?.file ? "Replace" : "Select"}
+                            <input
+                              type="file"
+                              hidden
+                              accept="audio/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleFileSelect(track.id, file);
+                                e.target.value = "";
                               }}
                             />
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              color="secondary"
-                              startIcon={<YouTubeIcon />}
-                              disabled={!state?.youtubeUrl || isBusy}
-                              onClick={() => fetchFromYoutube(track)}
-                            >
-                              Fetch
-                            </Button>
-                          </Stack>
+                          </Button>
                         )}
 
                         {state?.status === "error" && state.error && (
@@ -394,28 +264,16 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           </Table>
         </Paper>
 
-        <Stack direction="row" spacing={2}>
-          <Button
-            variant="contained"
-            color="secondary"
-            fullWidth
-            onClick={uploadAll}
-            disabled={anyBusy || !anyFileReady}
-            startIcon={<UploadFileIcon />}
-          >
-            {anyBusy ? "Processing..." : "Upload All"}
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            fullWidth
-            onClick={fetchAll}
-            disabled={anyBusy || !anyUrlReady}
-            startIcon={<YouTubeIcon />}
-          >
-            {anyBusy ? "Processing..." : "Fetch All"}
-          </Button>
-        </Stack>
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
+          onClick={uploadAll}
+          disabled={anyUploading || !anyReady}
+          startIcon={<UploadFileIcon />}
+        >
+          {anyUploading ? "Uploading..." : "Upload All"}
+        </Button>
       </Box>
     </Box>
   );
