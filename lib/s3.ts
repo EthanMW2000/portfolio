@@ -1,29 +1,13 @@
-import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { awsCredentialsProvider } from "@vercel/functions/oidc";
 import sharp from "sharp";
 import exifr from "exifr";
 import type { ExifData, Photo } from "@/types";
-
-function buildS3Client() {
-  if (process.env.VERCEL) {
-    return new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN! }),
-    });
-  }
-  return new S3Client({ region: process.env.AWS_REGION });
-}
+import { buildS3Client, bucket, cdnUrl } from "@/lib/aws";
 
 const s3 = buildS3Client();
-const bucket = process.env.S3_BUCKET_NAME!;
 const thumbnailPrefix = process.env.S3_THUMBNAIL_PREFIX!;
 const webPrefix = process.env.S3_WEB_PREFIX!;
-const cdnDomain = process.env.CLOUDFRONT_DOMAIN!;
-
-function cdnUrl(key: string): string {
-  return `https://${cdnDomain}/${key}`;
-}
 
 export async function listFolder(prefix: string): Promise<string[]> {
   const keys: string[] = [];

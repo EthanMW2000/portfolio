@@ -61,6 +61,9 @@ export function NavBar() {
           <Button component={Link} href="/photography" sx={navButtonSx}>
             Photography
           </Button>
+          <Button component={Link} href="/vinyl" sx={navButtonSx}>
+            Vinyl
+          </Button>
         </Box>
 
         <IconButton
@@ -102,6 +105,15 @@ export function NavBar() {
               >
                 <ListItemText
                   primary={<Typography sx={{ fontWeight: 600, fontSize: "1.1rem" }}>Photography</Typography>}
+                />
+              </ListItemButton>
+              <ListItemButton
+                component={Link}
+                href="/vinyl"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary={<Typography sx={{ fontWeight: 600, fontSize: "1.1rem" }}>Vinyl</Typography>}
                 />
               </ListItemButton>
             </List>

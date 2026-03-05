@@ -30,3 +30,36 @@ export interface PhotosResponse {
   photos: Photo[];
   album?: string;
 }
+
+export interface VinylRecord {
+  id: string;
+  title: string;
+  artist: string;
+  year: number | null;
+  mbid: string;
+  coverKey: string | null;
+  coverUrl: string | null;
+  trackCount: number;
+  createdAt: string;
+}
+
+export interface VinylTrack {
+  id: string;
+  recordId: string;
+  title: string;
+  trackNumber: number;
+  discNumber: number;
+  duration: number | null;
+  mbid: string | null;
+  fingerprint: number[] | null;
+}
+
+export interface VinylRecordWithTracks extends VinylRecord {
+  tracks: VinylTrack[];
+}
+
+export interface VinylCollectionStats {
+  totalRecords: number;
+  totalTracks: number;
+  uniqueArtists: number;
+}
