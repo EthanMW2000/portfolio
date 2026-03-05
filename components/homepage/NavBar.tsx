@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import AppBar from "@mui/material/AppBar";
+import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +17,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
 const routes = ["About", "Experience", "Contact"];
+
+const navButtonSx = {
+  color: "text.primary",
+  fontSize: "1rem",
+  fontWeight: 600,
+  position: "relative",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    bottom: 6,
+    left: "50%",
+    width: 0,
+    height: 2,
+    bgcolor: "secondary.main",
+    transition: "all 0.3s ease",
+    transform: "translateX(-50%)",
+  },
+  "&:hover::after": { width: "60%" },
+  "&:hover": { color: "secondary.main", bgcolor: "transparent" },
+};
 
 export function NavBar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -31,34 +53,14 @@ export function NavBar() {
             <Button
               key={route}
               href={`#${route.toLowerCase()}`}
-              sx={{
-                color: "text.primary",
-                fontSize: "1rem",
-                fontWeight: 600,
-                position: "relative",
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 6,
-                  left: "50%",
-                  width: 0,
-                  height: 2,
-                  bgcolor: "secondary.main",
-                  transition: "all 0.3s ease",
-                  transform: "translateX(-50%)",
-                },
-                "&:hover::after": {
-                  width: "60%",
-                },
-                "&:hover": {
-                  color: "secondary.main",
-                  bgcolor: "transparent",
-                },
-              }}
+              sx={navButtonSx}
             >
               {route}
             </Button>
           ))}
+          <Button component={Link} href="/photography" sx={navButtonSx}>
+            Photography
+          </Button>
         </Box>
 
         <IconButton
@@ -93,6 +95,15 @@ export function NavBar() {
                   />
                 </ListItemButton>
               ))}
+              <ListItemButton
+                component={Link}
+                href="/photography"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <ListItemText
+                  primary={<Typography sx={{ fontWeight: 600, fontSize: "1.1rem" }}>Photography</Typography>}
+                />
+              </ListItemButton>
             </List>
           </Box>
         </Drawer>

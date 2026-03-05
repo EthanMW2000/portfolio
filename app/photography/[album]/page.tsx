@@ -23,7 +23,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   return (
     <>
-      <Typography variant="h3" sx={{ mb: 3 }}>
+      <Typography variant="h3" color="text.primary" sx={{ mb: 3, fontWeight: 700 }}>
         {formatAlbumName(album)}
       </Typography>
       <MasonryGrid photos={photos} />
