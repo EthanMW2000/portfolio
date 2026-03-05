@@ -26,6 +26,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlbumIcon from "@mui/icons-material/Album";
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -400,13 +401,23 @@ export default function VinylAdmin() {
                       primary={record.title}
                       secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks`}
                     />
-                    <IconButton
-                      edge="end"
-                      onClick={() => handleDelete(record.id)}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <Stack direction="row" spacing={0.5}>
+                      <IconButton
+                        href={`/admin/vinyl/${record.id}/fingerprint`}
+                        color="secondary"
+                        size="small"
+                      >
+                        <FingerprintIcon />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        onClick={() => handleDelete(record.id)}
+                        color="error"
+                        size="small"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Stack>
                   </ListItem>
                 </Box>
               ))}

@@ -55,6 +55,11 @@ export async function getRecordWithTracks(
   return { ...record, tracks };
 }
 
+export async function getAllTracks(): Promise<VinylTrack[]> {
+  const result = await db.send(new ScanCommand({ TableName: tracksTable }));
+  return (result.Items ?? []) as VinylTrack[];
+}
+
 export async function getCollectionStats(): Promise<VinylCollectionStats> {
   const records = await getAllRecords();
   const artists = new Set(records.map((r) => r.artist));
