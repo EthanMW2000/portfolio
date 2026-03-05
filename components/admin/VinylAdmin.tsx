@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -16,19 +17,38 @@ import {
   IconButton,
   Divider,
   Alert,
+  Collapse,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AlbumIcon from "@mui/icons-material/Album";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import type { VinylRecord } from "@/types";
-import type { MBRelease } from "@/lib/musicbrainz";
+import type { MBRelease, MBTrack } from "@/lib/musicbrainz";
 
 interface ImportResult {
   record: VinylRecord;
   tracksImported: number;
   fingerprintsFound: number;
   fingerprintsBackfilling: number;
+}
+
+interface ReleasePreview {
+  tracks: MBTrack[];
+  coverArtUrl: string | null;
+}
+
+function formatDuration(seconds: number | null): string {
+  if (!seconds) return "—";
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return `${min}:${sec.toString().padStart(2, "0")}`;
 }
 
 export default function VinylAdmin() {
@@ -40,6 +60,9 @@ export default function VinylAdmin() {
   const [records, setRecords] = useState<VinylRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<Record<string, ReleasePreview>>({});
+  const [loadingPreview, setLoadingPreview] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCollection();
@@ -63,6 +86,8 @@ export default function VinylAdmin() {
     setSearching(true);
     setResults([]);
     setImportResult(null);
+    setExpandedId(null);
+    setPreviews({});
     setError(null);
 
     try {
@@ -76,6 +101,32 @@ export default function VinylAdmin() {
       setError("Search failed");
     } finally {
       setSearching(false);
+    }
+  }
+
+  async function handleExpand(releaseId: string) {
+    if (expandedId === releaseId) {
+      setExpandedId(null);
+      return;
+    }
+
+    setExpandedId(releaseId);
+
+    if (previews[releaseId]) return;
+
+    setLoadingPreview(releaseId);
+    try {
+      const res = await fetch(
+        `/api/vinyl/preview?id=${encodeURIComponent(releaseId)}`
+      );
+      if (!res.ok) throw new Error("Preview failed");
+      const data = await res.json();
+      setPreviews((prev) => ({ ...prev, [releaseId]: data }));
+    } catch {
+      setError("Failed to load release details");
+      setExpandedId(null);
+    } finally {
+      setLoadingPreview(null);
     }
   }
 
@@ -100,6 +151,8 @@ export default function VinylAdmin() {
       setImportResult(data);
       setResults([]);
       setQuery("");
+      setExpandedId(null);
+      setPreviews({});
       await fetchCollection();
     } catch {
       setError("Import failed");
@@ -142,7 +195,11 @@ export default function VinylAdmin() {
           alignItems="center"
           mb={3}
         >
-          <Typography variant="h3" color="text.primary" sx={{ fontSize: { xs: "1.75rem", sm: "3rem" } }}>
+          <Typography
+            variant="h3"
+            color="text.primary"
+            sx={{ fontSize: { xs: "1.75rem", sm: "3rem" } }}
+          >
             Vinyl Collection
           </Typography>
           <Button
@@ -190,29 +247,112 @@ export default function VinylAdmin() {
 
           {results.length > 0 && (
             <List sx={{ mt: 2 }}>
-              {results.map((release) => (
-                <ListItem
-                  key={release.id}
-                  divider
-                  sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "flex-start", sm: "center" }, gap: 1 }}
-                >
-                  <ListItemText
-                    primary={release.title}
-                    secondary={`${release.artist}${release.year ? ` (${release.year})` : ""} — ${release.trackCount} tracks`}
-                  />
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleImport(release)}
-                    disabled={importing !== null}
-                    startIcon={<AlbumIcon />}
-                    sx={{ flexShrink: 0 }}
-                  >
-                    {importing === release.id ? "Importing..." : "Import"}
-                  </Button>
-                </ListItem>
-              ))}
+              {results.map((release) => {
+                const preview = previews[release.id];
+                const isExpanded = expandedId === release.id;
+
+                return (
+                  <Box key={release.id}>
+                    <ListItem
+                      divider={!isExpanded}
+                      sx={{
+                        flexDirection: { xs: "column", sm: "row" },
+                        alignItems: { xs: "flex-start", sm: "center" },
+                        gap: 1,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleExpand(release.id)}
+                    >
+                      <ListItemText
+                        primary={release.title}
+                        secondary={`${release.artist}${release.year ? ` (${release.year})` : ""} — ${release.trackCount} tracks`}
+                      />
+                      <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
+                        <IconButton size="small">
+                          {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        </IconButton>
+                      </Stack>
+                    </ListItem>
+
+                    <Collapse in={isExpanded}>
+                      <Box sx={{ px: 2, pb: 2 }}>
+                        {loadingPreview === release.id && (
+                          <LinearProgress color="secondary" sx={{ mb: 2 }} />
+                        )}
+
+                        {preview && (
+                          <Stack
+                            direction={{ xs: "column", sm: "row" }}
+                            spacing={2}
+                            sx={{ mb: 2 }}
+                          >
+                            {preview.coverArtUrl && (
+                              <Box sx={{ flexShrink: 0 }}>
+                                <img
+                                  src={preview.coverArtUrl}
+                                  alt={release.title}
+                                  style={{
+                                    width: 120,
+                                    height: 120,
+                                    objectFit: "cover",
+                                    borderRadius: 8,
+                                  }}
+                                />
+                              </Box>
+                            )}
+                            <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+                              <Table size="small">
+                                <TableBody>
+                                  {preview.tracks.map((track) => (
+                                    <TableRow key={`${track.discNumber}-${track.trackNumber}`}>
+                                      <TableCell sx={{ width: 30, px: 0.5 }}>
+                                        {track.trackNumber}
+                                      </TableCell>
+                                      <TableCell sx={{ px: 0.5 }}>
+                                        <Typography variant="body2" noWrap>
+                                          {track.title}
+                                        </Typography>
+                                      </TableCell>
+                                      <TableCell
+                                        align="right"
+                                        sx={{ width: 50, px: 0.5 }}
+                                      >
+                                        <Typography
+                                          variant="body2"
+                                          color="text.secondary"
+                                        >
+                                          {formatDuration(track.duration)}
+                                        </Typography>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Stack>
+                        )}
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleImport(release);
+                          }}
+                          disabled={importing !== null}
+                          startIcon={<AlbumIcon />}
+                          fullWidth
+                        >
+                          {importing === release.id
+                            ? "Importing..."
+                            : "Import this album"}
+                        </Button>
+                      </Box>
+                      <Divider />
+                    </Collapse>
+                  </Box>
+                );
+              })}
             </List>
           )}
 
