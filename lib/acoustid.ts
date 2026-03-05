@@ -1,46 +1,47 @@
 const ACOUSTID_URL = "https://api.acoustid.org/v2/lookup";
 
-export async function lookupFingerprintByMbid(
-  recordingMbid: string
-): Promise<number[] | null> {
+export interface AcoustIdMatch {
+  recordingMbid: string;
+  score: number;
+}
+
+export async function lookupByFingerprint(
+  fingerprint: string,
+  duration: number
+): Promise<AcoustIdMatch[]> {
   const apiKey = process.env.ACOUSTID_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) return [];
 
   try {
-    const params = new URLSearchParams({
-      client: apiKey,
-      meta: "fingerprints",
-      recordingid: recordingMbid,
-      format: "json",
+    const res = await fetch(ACOUSTID_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client: apiKey,
+        meta: "recordings",
+        fingerprint,
+        duration: String(Math.round(duration)),
+        format: "json",
+      }),
     });
-
-    const res = await fetch(
-      `${ACOUSTID_URL}?${params.toString()}&lookup_type=recordingid`
-    );
-    if (!res.ok) return null;
+    if (!res.ok) return [];
 
     const data = await res.json();
-    const results = data.results ?? [];
+    const matches: AcoustIdMatch[] = [];
 
-    for (const result of results) {
-      for (const fingerprint of result.fingerprints ?? []) {
-        if (fingerprint.fingerprint) {
-          return decodeAcoustIdFingerprint(fingerprint.fingerprint);
+    for (const result of data.results ?? []) {
+      for (const recording of result.recordings ?? []) {
+        if (recording.id) {
+          matches.push({
+            recordingMbid: recording.id,
+            score: result.score ?? 0,
+          });
         }
       }
     }
 
-    return null;
+    return matches;
   } catch {
-    return null;
+    return [];
   }
-}
-
-function decodeAcoustIdFingerprint(encoded: string): number[] {
-  const raw = Buffer.from(encoded, "base64");
-  const values: number[] = [];
-  for (let i = 0; i + 3 < raw.length; i += 4) {
-    values.push(raw.readUInt32LE(i));
-  }
-  return values;
 }

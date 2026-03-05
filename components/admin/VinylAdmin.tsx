@@ -35,8 +35,6 @@ import type { MBRelease, MBTrack } from "@/lib/musicbrainz";
 interface ImportResult {
   record: VinylRecord;
   tracksImported: number;
-  fingerprintsFound: number;
-  fingerprintsBackfilling: number;
 }
 
 interface ReleasePreview {
@@ -375,8 +373,6 @@ export default function VinylAdmin() {
             <Alert severity="success" sx={{ mt: 2 }}>
               Imported &quot;{importResult.record.title}&quot; —{" "}
               {importResult.tracksImported} tracks.
-              {importResult.fingerprintsBackfilling > 0 &&
-                ` Backfilling ${importResult.fingerprintsBackfilling} fingerprints in background.`}
             </Alert>
           )}
         </Paper>

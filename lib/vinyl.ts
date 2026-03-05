@@ -5,6 +5,7 @@ import {
   DeleteCommand,
   QueryCommand,
   BatchWriteCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { buildDynamoClient } from "@/lib/aws";
 import type {
@@ -122,6 +123,41 @@ export async function deleteRecordAndTracks(id: string): Promise<void> {
   }
 
   await db.send(new DeleteCommand({ TableName: recordsTable, Key: { id } }));
+}
+
+export async function findTrackByMbid(
+  mbid: string
+): Promise<VinylTrack | null> {
+  const result = await db.send(
+    new ScanCommand({
+      TableName: tracksTable,
+      FilterExpression: "mbid = :mbid",
+      ExpressionAttributeValues: { ":mbid": mbid },
+      Limit: 1,
+    })
+  );
+  return (result.Items?.[0] as VinylTrack) ?? null;
+}
+
+export async function updateTrackFingerprint(
+  trackId: string,
+  fingerprint: number[]
+): Promise<void> {
+  await db.send(
+    new UpdateCommand({
+      TableName: tracksTable,
+      Key: { id: trackId },
+      UpdateExpression: "SET fingerprint = :fp",
+      ExpressionAttributeValues: { ":fp": fingerprint },
+    })
+  );
+}
+
+export async function getTrack(trackId: string): Promise<VinylTrack | null> {
+  const result = await db.send(
+    new GetCommand({ TableName: tracksTable, Key: { id: trackId } })
+  );
+  return (result.Item as VinylTrack) ?? null;
 }
 
 export async function getAllFingerprints(): Promise<

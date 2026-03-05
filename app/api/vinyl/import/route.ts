@@ -3,7 +3,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { requireSession } from "@/lib/auth";
 import { buildS3Client, bucket, cdnUrl } from "@/lib/aws";
 import { getReleaseTracks, getCoverArtUrl } from "@/lib/musicbrainz";
-import { lookupFingerprintByMbid } from "@/lib/acoustid";
 import { createRecord, createTracks } from "@/lib/vinyl";
 import type { VinylRecord, VinylTrack } from "@/types";
 
@@ -84,21 +83,9 @@ export async function POST(request: NextRequest) {
       await createTracks(tracks);
     }
 
-    let fingerprintsFound = 0;
-    const trackMbids = tracks.filter((t) => t.mbid);
-    if (trackMbids.length > 0) {
-      backfillFingerprints(trackMbids).then((count) => {
-        console.log(
-          `Backfilled ${count} fingerprints for "${title}" by ${artist}`
-        );
-      });
-    }
-
     return NextResponse.json({
       record,
       tracksImported: tracks.length,
-      fingerprintsFound,
-      fingerprintsBackfilling: trackMbids.length,
     });
   } catch (err) {
     console.error("Import error:", err);
@@ -107,30 +94,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-async function backfillFingerprints(tracks: VinylTrack[]): Promise<number> {
-  const { createTracks: updateTracks } = await import("@/lib/vinyl");
-  let count = 0;
-
-  for (const track of tracks) {
-    if (!track.mbid) continue;
-    try {
-      await new Promise((r) => setTimeout(r, 1100));
-      const fp = await lookupFingerprintByMbid(track.mbid);
-      if (fp) {
-        track.fingerprint = fp;
-        count++;
-      }
-    } catch (err) {
-      console.error(`Fingerprint lookup failed for ${track.title}:`, err);
-    }
-  }
-
-  if (count > 0) {
-    const updated = tracks.filter((t) => t.fingerprint);
-    await updateTracks(updated);
-  }
-
-  return count;
 }
