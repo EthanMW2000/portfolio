@@ -5,7 +5,6 @@ import {
   DeleteCommand,
   QueryCommand,
   BatchWriteCommand,
-  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { buildDynamoClient } from "@/lib/aws";
 import type {
@@ -54,6 +53,11 @@ export async function getRecordWithTracks(
   );
 
   return { ...record, tracks };
+}
+
+export async function getAllTracks(): Promise<VinylTrack[]> {
+  const result = await db.send(new ScanCommand({ TableName: tracksTable }));
+  return (result.Items ?? []) as VinylTrack[];
 }
 
 export async function getCollectionStats(): Promise<VinylCollectionStats> {
@@ -139,43 +143,3 @@ export async function findTrackByMbid(
   return (result.Items?.[0] as VinylTrack) ?? null;
 }
 
-export async function updateTrackFingerprint(
-  trackId: string,
-  fingerprint: number[]
-): Promise<void> {
-  await db.send(
-    new UpdateCommand({
-      TableName: tracksTable,
-      Key: { id: trackId },
-      UpdateExpression: "SET fingerprint = :fp",
-      ExpressionAttributeValues: { ":fp": fingerprint },
-    })
-  );
-}
-
-export async function getTrack(trackId: string): Promise<VinylTrack | null> {
-  const result = await db.send(
-    new GetCommand({ TableName: tracksTable, Key: { id: trackId } })
-  );
-  return (result.Item as VinylTrack) ?? null;
-}
-
-export async function getAllFingerprints(): Promise<
-  { trackId: string; recordId: string; fingerprint: number[] }[]
-> {
-  const result = await db.send(
-    new ScanCommand({
-      TableName: tracksTable,
-      FilterExpression: "attribute_exists(fingerprint)",
-      ProjectionExpression: "id, recordId, fingerprint",
-    })
-  );
-
-  return (result.Items ?? [])
-    .filter((item) => item.fingerprint && item.fingerprint.length > 0)
-    .map((item) => ({
-      trackId: item.id as string,
-      recordId: item.recordId as string,
-      fingerprint: item.fingerprint as number[],
-    }));
-}
