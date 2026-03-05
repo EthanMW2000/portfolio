@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "photography-portfolio-images.s3.us-east-2.amazonaws.com",
+        hostname: "d3nlnb6o0sfl9e.cloudfront.net",
       },
     ],
   },

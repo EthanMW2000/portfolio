@@ -1,79 +1,35 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { ImageContainer } from "@/components/photography/ImageContainer";
-import Sidebar from "@/components/photography/Sidebar";
-import { S3Object } from "@/types";
+import AlbumCard from "@/components/photography/AlbumCard";
+import { getAlbums } from "@/lib/photography";
 
-export default async function Photography() {
-  const retrieveImages = async () => {
-    const imagesUrls: S3Object[] = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/api/photography`,
-      { next: { revalidate: 3600 } }
-    )
-      .then((res) =>
-        res
-          .json()
-          .then((data: any[]) =>
-            data.map((d) => new S3Object(d.url, d.metadata))
-          )
-      )
-      .catch((err) => {
-        console.error(err);
-        return [];
-      });
-
-    imagesUrls.sort((a, b) => {
-      if (!a.metadata?.DateTimeOriginal || !b.metadata?.DateTimeOriginal)
-        return 0;
-      return (
-        Number(new Date(b.metadata.DateTimeOriginal)) -
-        Number(new Date(a.metadata.DateTimeOriginal))
-      );
-    });
-
-    return imagesUrls;
-  };
-
-  const imagesUrls = await retrieveImages();
+export default async function PhotographyPage() {
+  const albums = await getAlbums();
 
   return (
-    <Box component="main">
-      <Sidebar />
-      <Container
-        maxWidth="lg"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          pt: 10,
-          pb: 6,
-        }}
-      >
-        <Typography variant="h3" sx={{ mb: 2, textAlign: "center" }}>
-          My photography showcase is currently being built!
-        </Typography>
-        <Typography variant="body1" sx={{ color: "secondary.main", mb: 4 }}>
-          Check back soon
-        </Typography>
-        <Button
-          variant="outlined"
-          color="secondary"
-          href="/"
-          endIcon={<ArrowForwardIcon />}
-          size="large"
-          sx={{ mb: 6 }}
+    <>
+      <Typography variant="h3" sx={{ mb: 3 }}>
+        Photography
+      </Typography>
+      {albums.length === 0 ? (
+        <Typography color="text.secondary">No albums yet.</Typography>
+      ) : (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+            },
+            gap: 3,
+          }}
         >
-          Home
-        </Button>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "center" }}>
-          {imagesUrls.map((image, index) => (
-            <ImageContainer key={`${index}-${image.url}`} s3Object={image} />
+          {albums.map((album) => (
+            <AlbumCard key={album.slug} album={album} />
           ))}
         </Box>
-      </Container>
-    </Box>
+      )}
+    </>
   );
 }

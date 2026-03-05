@@ -1,11 +1,32 @@
-import { HeadObjectCommandOutput } from "@aws-sdk/client-s3";
+export interface ExifData {
+  camera: string | null;
+  focalLength: string | null;
+  aperture: string | null;
+  shutterSpeed: string | null;
+  iso: number | null;
+  dateTaken: string | null;
+}
 
-export class S3Object {
-  readonly url: string;
-  readonly metadata: any;
+export interface Photo {
+  key: string;
+  thumbnailUrl: string;
+  webUrl: string;
+  exif: ExifData;
+  album: string;
+}
 
-  constructor(url: string, metadata: any) {
-    this.url = url;
-    this.metadata = metadata;
-  }
+export interface Album {
+  name: string;
+  slug: string;
+  coverPhoto: Photo | null;
+  photoCount: number;
+}
+
+export interface AlbumsResponse {
+  albums: Album[];
+}
+
+export interface PhotosResponse {
+  photos: Photo[];
+  album?: string;
 }
