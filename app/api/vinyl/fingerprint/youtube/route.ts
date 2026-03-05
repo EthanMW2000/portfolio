@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { InvokeCommand } from "@aws-sdk/client-lambda";
 import { requireSession } from "@/lib/auth";
 import { buildLambdaClient } from "@/lib/aws";
+import { objectExists } from "@/lib/s3";
 
 const YOUTUBE_URL_PATTERN =
   /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[A-Za-z0-9_-]+/;
@@ -31,29 +32,29 @@ export async function POST(request: NextRequest) {
   const functionName =
     process.env.AUDIO_PROCESSOR_FUNCTION_NAME ?? "audio-processor";
 
-  const response = await lambda.send(
+  await lambda.send(
     new InvokeCommand({
       FunctionName: functionName,
-      InvocationType: "RequestResponse",
+      InvocationType: "Event",
       Payload: Buffer.from(JSON.stringify({ trackId, youtubeUrl })),
     }),
   );
 
-  if (response.FunctionError) {
-    return NextResponse.json(
-      { error: "Lambda execution failed" },
-      { status: 502 },
-    );
+  return NextResponse.json({ status: "processing", key: `vinyl/audio/${trackId}.mp3` });
+}
+
+export async function GET(request: NextRequest) {
+  const sessionOrResponse = await requireSession(request);
+  if (sessionOrResponse instanceof NextResponse) return sessionOrResponse;
+
+  const trackId = new URL(request.url).searchParams.get("trackId");
+
+  if (!trackId || !TRACK_ID_PATTERN.test(trackId)) {
+    return NextResponse.json({ error: "Invalid trackId" }, { status: 400 });
   }
 
-  const result = JSON.parse(Buffer.from(response.Payload!).toString());
+  const key = `vinyl/audio/${trackId}.mp3`;
+  const exists = await objectExists(key);
 
-  if (result.status !== "ok") {
-    return NextResponse.json(
-      { error: result.error ?? "Processing failed" },
-      { status: 502 },
-    );
-  }
-
-  return NextResponse.json({ status: "ok", key: result.key });
+  return NextResponse.json({ ready: exists, key });
 }

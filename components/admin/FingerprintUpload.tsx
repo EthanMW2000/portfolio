@@ -156,10 +156,26 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
         throw new Error(body.error || `Request failed: ${res.status}`);
       }
 
-      setTrackStates((prev) => ({
-        ...prev,
-        [track.id]: { ...prev[track.id], status: "done", progress: 100 },
-      }));
+      const maxAttempts = 40;
+      for (let i = 0; i < maxAttempts; i++) {
+        await new Promise((r) => setTimeout(r, 3000));
+
+        const poll = await fetch(
+          `/api/vinyl/fingerprint/youtube?trackId=${track.id}`,
+        );
+        if (!poll.ok) continue;
+
+        const { ready } = await poll.json();
+        if (ready) {
+          setTrackStates((prev) => ({
+            ...prev,
+            [track.id]: { ...prev[track.id], status: "done", progress: 100 },
+          }));
+          return;
+        }
+      }
+
+      throw new Error("Timed out waiting for audio processing");
     } catch (err) {
       setTrackStates((prev) => ({
         ...prev,
