@@ -1,83 +1,30 @@
-import {
-  GetObjectCommand,
-  ListObjectsV2Command,
-  S3Client,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NextRequest, NextResponse } from "next/server";
+import { getAlbums, getAlbumPhotos, getAllPhotos } from "@/lib/photography";
 
-import exifr from "exifr";
+export const dynamic = "force-dynamic";
 
-const imageClient = new S3Client();
-const imageBucket = process.env.S3_BUCKET_NAME;
-const imagePrefix = process.env.S3_BUCKET_PREFIX;
-
-async function getImageMetadata(url: string): Promise<any> {
-  const response = await fetch(url);
-  const arrayBuffer = await response.arrayBuffer();
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const mode = searchParams.get("mode") ?? "albums";
+  const albumParam = searchParams.get("album");
 
   try {
-    const metadata = await exifr.parse(arrayBuffer);
-    return metadata;
-  } catch (e) {
-    console.error("Error parsing metadata", e);
-  }
-}
+    if (mode === "albums") {
+      return NextResponse.json({ albums: await getAlbums() });
+    }
+    if (mode === "album" && albumParam) {
+      return NextResponse.json({ photos: await getAlbumPhotos(albumParam), album: albumParam });
+    }
+    if (mode === "flat") {
+      return NextResponse.json({ photos: await getAllPhotos() });
+    }
 
-export async function GET(_: Request) {
-  const allObjects = [];
-  let continuationToken;
-
-  do {
-    const params: ListObjectsV2Command = new ListObjectsV2Command({
-      Bucket: imageBucket,
-      Prefix: imagePrefix,
-      ContinuationToken: continuationToken,
-    });
-
-    const response = await imageClient.send(params);
-    const objects = response.Contents || [];
-
-    allObjects.push(...objects);
-    continuationToken = response.NextContinuationToken;
-  } while (continuationToken);
-
-  const filteredImages = allObjects
-    .filter((image) => {
-      return image.Key !== imagePrefix;
-    })
-    .map((image) => {
-      return image.Key;
-    });
-
-  try {
-    const imageDataPromises = await Promise.allSettled(
-      filteredImages.map(async (image) => {
-        const params: GetObjectCommand = new GetObjectCommand({
-          Bucket: imageBucket,
-          Key: image,
-        });
-
-        const url = await getSignedUrl(imageClient, params, {
-          expiresIn: 3600,
-        });
-        const metadata = await getImageMetadata(url);
-
-        return {
-          url,
-          metadata,
-        };
-      })
-    );
-
-    const imageData = imageDataPromises.map((promise) => {
-      if (promise.status === "fulfilled") {
-        return promise.value;
-      }
-    })
-
-    return new Response(JSON.stringify(imageData));
+    return NextResponse.json({ error: "Invalid mode" }, { status: 400 });
   } catch (err) {
-    console.log(err);
-    return new Response("Error fetching images", { status: 500 });
+    console.error("Photography API error:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch photography data" },
+      { status: 500 }
+    );
   }
 }
