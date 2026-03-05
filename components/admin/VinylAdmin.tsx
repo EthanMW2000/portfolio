@@ -60,9 +60,9 @@ export default function VinylAdmin() {
   const [records, setRecords] = useState<VinylRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [previews, setPreviews] = useState<Record<string, ReleasePreview>>({});
-  const [loadingPreview, setLoadingPreview] = useState<string | null>(null);
+  const [loadingPreviews, setLoadingPreviews] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchCollection();
@@ -86,7 +86,7 @@ export default function VinylAdmin() {
     setSearching(true);
     setResults([]);
     setImportResult(null);
-    setExpandedId(null);
+    setExpandedIds(new Set());
     setPreviews({});
     setError(null);
 
@@ -105,16 +105,19 @@ export default function VinylAdmin() {
   }
 
   async function handleExpand(releaseId: string) {
-    if (expandedId === releaseId) {
-      setExpandedId(null);
-      return;
-    }
-
-    setExpandedId(releaseId);
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(releaseId)) {
+        next.delete(releaseId);
+      } else {
+        next.add(releaseId);
+      }
+      return next;
+    });
 
     if (previews[releaseId]) return;
 
-    setLoadingPreview(releaseId);
+    setLoadingPreviews((prev) => new Set(prev).add(releaseId));
     try {
       const res = await fetch(
         `/api/vinyl/preview?id=${encodeURIComponent(releaseId)}`
@@ -124,9 +127,17 @@ export default function VinylAdmin() {
       setPreviews((prev) => ({ ...prev, [releaseId]: data }));
     } catch {
       setError("Failed to load release details");
-      setExpandedId(null);
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(releaseId);
+        return next;
+      });
     } finally {
-      setLoadingPreview(null);
+      setLoadingPreviews((prev) => {
+        const next = new Set(prev);
+        next.delete(releaseId);
+        return next;
+      });
     }
   }
 
@@ -151,7 +162,7 @@ export default function VinylAdmin() {
       setImportResult(data);
       setResults([]);
       setQuery("");
-      setExpandedId(null);
+      setExpandedIds(new Set());
       setPreviews({});
       await fetchCollection();
     } catch {
@@ -249,7 +260,7 @@ export default function VinylAdmin() {
             <List sx={{ mt: 2 }}>
               {results.map((release) => {
                 const preview = previews[release.id];
-                const isExpanded = expandedId === release.id;
+                const isExpanded = expandedIds.has(release.id);
 
                 return (
                   <Box key={release.id}>
@@ -276,7 +287,7 @@ export default function VinylAdmin() {
 
                     <Collapse in={isExpanded}>
                       <Box sx={{ px: 2, pb: 2 }}>
-                        {loadingPreview === release.id && (
+                        {loadingPreviews.has(release.id) && (
                           <LinearProgress color="secondary" sx={{ mb: 2 }} />
                         )}
 
