@@ -1,18 +1,15 @@
 import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { fromWebToken } from "@aws-sdk/credential-providers";
+import { awsCredentialsProvider } from "@vercel/functions/oidc";
 import sharp from "sharp";
 import exifr from "exifr";
 import type { ExifData, Photo } from "@/types";
 
 function buildS3Client() {
-  if (process.env.VERCEL_OIDC_TOKEN) {
+  if (process.env.VERCEL) {
     return new S3Client({
       region: process.env.AWS_REGION,
-      credentials: fromWebToken({
-        roleArn: process.env.AWS_ROLE_ARN!,
-        webIdentityToken: process.env.VERCEL_OIDC_TOKEN,
-      }),
+      credentials: awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN! }),
     });
   }
   return new S3Client({ region: process.env.AWS_REGION });
