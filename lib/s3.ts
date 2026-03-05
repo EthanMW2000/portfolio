@@ -1,10 +1,24 @@
 import { ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { fromWebToken } from "@aws-sdk/credential-providers";
 import sharp from "sharp";
 import exifr from "exifr";
 import type { ExifData, Photo } from "@/types";
 
-const s3 = new S3Client();
+function buildS3Client() {
+  if (process.env.VERCEL_OIDC_TOKEN) {
+    return new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: fromWebToken({
+        roleArn: process.env.AWS_ROLE_ARN!,
+        webIdentityToken: process.env.VERCEL_OIDC_TOKEN,
+      }),
+    });
+  }
+  return new S3Client({ region: process.env.AWS_REGION });
+}
+
+const s3 = buildS3Client();
 const bucket = process.env.S3_BUCKET_NAME!;
 const thumbnailPrefix = process.env.S3_THUMBNAIL_PREFIX!;
 const webPrefix = process.env.S3_WEB_PREFIX!;
