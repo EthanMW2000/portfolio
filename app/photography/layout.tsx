@@ -19,7 +19,7 @@ export default async function PhotographyLayout({
   const albums = await getAlbums();
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
       <Sidebar albums={albums} />
       <Box
         component="main"
@@ -28,6 +28,7 @@ export default async function PhotographyLayout({
           ml: { xs: 0, md: "240px" },
           p: { xs: 2, sm: 3 },
           pt: { xs: 8, md: 3 },
+          bgcolor: "background.default",
         }}
       >
         {children}

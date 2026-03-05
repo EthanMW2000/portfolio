@@ -15,13 +15,13 @@ interface AlbumCardProps {
 
 export default function AlbumCard({ album }: AlbumCardProps) {
   return (
-    <Card>
+    <Card sx={{ bgcolor: "background.default" }}>
       <CardActionArea component={Link} href={`/photography/${album.slug}`}>
         <Box
           sx={{
             position: "relative",
             paddingTop: "66%",
-            bgcolor: "grey.800",
+            bgcolor: "background.paper",
             overflow: "hidden",
           }}
         >
