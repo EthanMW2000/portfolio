@@ -402,29 +402,7 @@ export default function VinylAdmin() {
                   <ListItem>
                     <ListItemText
                       primary={record.title}
-                      secondary={
-                        <Stack direction="row" spacing={1} component="span">
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            component="span"
-                          >
-                            {record.artist}
-                          </Typography>
-                          {record.year && (
-                            <Chip
-                              label={record.year}
-                              size="small"
-                              variant="outlined"
-                            />
-                          )}
-                          <Chip
-                            label={`${record.trackCount} tracks`}
-                            size="small"
-                            variant="outlined"
-                          />
-                        </Stack>
-                      }
+                      secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks`}
                     />
                     <IconButton
                       edge="end"
