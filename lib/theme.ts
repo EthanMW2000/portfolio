@@ -5,23 +5,28 @@ import { createTheme, type PaletteMode } from "@mui/material/styles";
 export function getTheme(mode: PaletteMode) {
   const isDark = mode === "dark";
 
+  const border = isDark
+    ? "1px solid rgba(255,255,255,0.08)"
+    : "1px solid rgba(0,0,0,0.08)";
+
   return createTheme({
     palette: {
       mode,
       primary: {
-        main: "#1b2541",
+        main: isDark ? "#c8cdd8" : "#1b2541",
       },
       secondary: {
         main: isDark ? "#05a3b0" : "#048a95",
       },
       background: {
         default: isDark ? "#0f1117" : "#fafafa",
-        paper: isDark ? "#1a1d2e" : "#ffffff",
+        paper: isDark ? "#14161e" : "#ffffff",
       },
       text: {
         primary: isDark ? "#e8e8ed" : "#1b2541",
         secondary: isDark ? "#9ca3af" : "#4a5568",
       },
+      divider: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
     },
     typography: {
       fontFamily: "inherit",
@@ -71,15 +76,41 @@ export function getTheme(mode: PaletteMode) {
       MuiCard: {
         styleOverrides: {
           root: {
-            boxShadow: isDark
-              ? "0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05)"
-              : "0 1px 3px rgba(0,0,0,0.08)",
-            transition: "box-shadow 0.2s ease-in-out",
+            backgroundImage: "none",
+            backgroundColor: isDark ? "#14161e" : "#ffffff",
+            border,
+            boxShadow: "none",
+            transition: "border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
             "&:hover": {
-              boxShadow: isDark
-                ? "0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08)"
-                : "0 4px 12px rgba(0,0,0,0.12)",
+              borderColor: isDark
+                ? "rgba(255,255,255,0.14)"
+                : "rgba(0,0,0,0.14)",
             },
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: "none",
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundImage: "none",
+            backgroundColor: isDark ? "#14161e" : "#ffffff",
+            border,
+          },
+        },
+      },
+      MuiTableContainer: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "transparent",
+            border,
+            borderRadius: 12,
           },
         },
       },

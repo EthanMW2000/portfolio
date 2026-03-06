@@ -11,7 +11,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AlbumIcon from "@mui/icons-material/Album";
@@ -113,7 +112,7 @@ export default function VinylDetail({ record }: VinylDetailProps) {
       </Box>
 
       {record.tracks.length > 0 && (
-        <TableContainer component={Paper} sx={{ bgcolor: "background.paper" }}>
+        <TableContainer>
           <Table>
             <TableHead>
               <TableRow>

@@ -1,15 +1,13 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Button,
   Typography,
   TextField,
-  Paper,
   Stack,
-  Chip,
   LinearProgress,
   List,
   ListItem,
@@ -33,6 +31,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import type { VinylRecord, VinylRecordWithTracks } from "@/types";
 import VinylEditModal from "./VinylEditModal";
+import VinylAddModal from "./VinylAddModal";
 import type { MBRelease, MBTrack } from "@/lib/musicbrainz";
 
 interface ImportResult {
@@ -66,6 +65,8 @@ export default function VinylAdmin() {
   const [previews, setPreviews] = useState<Record<string, ReleasePreview>>({});
   const [loadingPreviews, setLoadingPreviews] = useState<Set<string>>(new Set());
   const [editingRecord, setEditingRecord] = useState<VinylRecordWithTracks | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [collectionFilter, setCollectionFilter] = useState("");
 
   useEffect(() => {
     fetchCollection();
@@ -235,15 +236,26 @@ export default function VinylAdmin() {
           >
             Vinyl Collection
           </Typography>
-          <Button
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            variant="outlined"
-            color="secondary"
-            size="small"
-          >
-            Logout
-          </Button>
+          <Stack direction="row" spacing={1}>
+            <Button
+              startIcon={<AlbumIcon />}
+              onClick={() => setShowAddModal(true)}
+              variant="contained"
+              color="secondary"
+              size="small"
+            >
+              Add Custom
+            </Button>
+            <Button
+              startIcon={<LogoutIcon />}
+              onClick={handleLogout}
+              variant="outlined"
+              color="secondary"
+              size="small"
+            >
+              Logout
+            </Button>
+          </Stack>
         </Stack>
 
         {error && (
@@ -252,7 +264,7 @@ export default function VinylAdmin() {
           </Alert>
         )}
 
-        <Paper sx={{ p: 3, mb: 3 }}>
+        <Box sx={{ p: 3, mb: 3, border: 1, borderColor: "divider", borderRadius: 3, bgcolor: "background.paper" }}>
           <Typography variant="h6" gutterBottom>
             Import from MusicBrainz
           </Typography>
@@ -433,12 +445,26 @@ export default function VinylAdmin() {
               {importResult.tracksImported} tracks.
             </Alert>
           )}
-        </Paper>
+        </Box>
 
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Collection ({records.length} records)
-          </Typography>
+        <Box sx={{ p: 3, border: 1, borderColor: "divider", borderRadius: 3, bgcolor: "background.paper" }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+            <Typography variant="h6">
+              Collection ({records.length} records)
+            </Typography>
+          </Stack>
+
+          {records.length > 0 && (
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Filter by title or artist..."
+              value={collectionFilter}
+              onChange={(e) => setCollectionFilter(e.target.value)}
+              InputProps={{ startAdornment: <SearchIcon sx={{ mr: 1, color: "text.secondary" }} /> }}
+              sx={{ mb: 1 }}
+            />
+          )}
 
           {loading && <LinearProgress color="secondary" />}
 
@@ -448,46 +474,85 @@ export default function VinylAdmin() {
             </Typography>
           )}
 
-          {records.length > 0 && (
-            <List>
-              {records.map((record, i) => (
-                <Box key={record.id}>
-                  {i > 0 && <Divider />}
-                  <ListItem>
-                    <ListItemText
-                      primary={record.title}
-                      secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks${record.audioComplete ? " ✓ audio" : ""}`}
-                    />
-                    <Stack direction="row" spacing={0.5}>
-                      <IconButton
-                        onClick={() => handleEdit(record.id)}
-                        color="secondary"
-                        size="small"
+          {records.length > 0 && (() => {
+            const q = collectionFilter.toLowerCase();
+            const filtered = q
+              ? records.filter((r) => r.title.toLowerCase().includes(q) || r.artist.toLowerCase().includes(q))
+              : records;
+
+            if (filtered.length === 0) {
+              return (
+                <Typography color="text.secondary" sx={{ py: 2 }}>
+                  No records match &ldquo;{collectionFilter}&rdquo;
+                </Typography>
+              );
+            }
+
+            return (
+              <List>
+                {filtered.map((record, i) => (
+                  <Box key={record.id}>
+                    {i > 0 && <Divider />}
+                    <ListItem>
+                      <Box
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          mr: 2,
+                          flexShrink: 0,
+                          borderRadius: 1,
+                          overflow: "hidden",
+                          bgcolor: "background.default",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        href={`/admin/vinyl/${record.id}/fingerprint`}
-                        color="secondary"
-                        size="small"
-                      >
-                        <FingerprintIcon />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        onClick={() => handleDelete(record.id)}
-                        color="error"
-                        size="small"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Stack>
-                  </ListItem>
-                </Box>
-              ))}
-            </List>
-          )}
-        </Paper>
+                        {record.coverUrl ? (
+                          <img
+                            src={record.coverUrl}
+                            alt=""
+                            style={{ width: 48, height: 48, objectFit: "cover" }}
+                          />
+                        ) : (
+                          <AlbumIcon sx={{ fontSize: 28, color: "text.disabled" }} />
+                        )}
+                      </Box>
+                      <ListItemText
+                        primary={record.title}
+                        secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks${record.audioComplete ? " ✓ audio" : ""}${!record.coverUrl ? " — no cover" : ""}`}
+                      />
+                      <Stack direction="row" spacing={0.5}>
+                        <IconButton
+                          onClick={() => handleEdit(record.id)}
+                          color="secondary"
+                          size="small"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          href={`/admin/vinyl/${record.id}/fingerprint`}
+                          color="secondary"
+                          size="small"
+                        >
+                          <FingerprintIcon />
+                        </IconButton>
+                        <IconButton
+                          edge="end"
+                          onClick={() => handleDelete(record.id)}
+                          color="error"
+                          size="small"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Stack>
+                    </ListItem>
+                  </Box>
+                ))}
+              </List>
+            );
+          })()}
+        </Box>
 
         {editingRecord && (
           <VinylEditModal
@@ -497,6 +562,15 @@ export default function VinylAdmin() {
             onSaved={handleEditSaved}
           />
         )}
+
+        <VinylAddModal
+          open={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSaved={(record) => {
+            setRecords((prev) => [record, ...prev]);
+            setShowAddModal(false);
+          }}
+        />
       </Box>
     </Box>
   );

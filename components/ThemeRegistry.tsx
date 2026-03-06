@@ -10,7 +10,9 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { getTheme } from "@/lib/theme";
 
 export function ThemeRegistry({ children }: { children: ReactNode }) {
-  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", {
+    defaultMatches: true,
+  });
   const theme = useMemo(() => getTheme(prefersDark ? "dark" : "light"), [prefersDark]);
 
   const [cache] = useState(() => {

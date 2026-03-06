@@ -15,6 +15,8 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import HomeIcon from "@mui/icons-material/Home";
+import AlbumIcon from "@mui/icons-material/Album";
 import type { Album } from "@/types";
 
 const SIDEBAR_WIDTH = 240;
@@ -99,6 +101,20 @@ function SidebarContent({ albums, onNavigate }: SidebarProps & { onNavigate?: ()
           </List>
         </>
       )}
+
+      <Box sx={{ mt: "auto" }}>
+        <Divider sx={{ my: 1.5 }} />
+        <List disablePadding>
+          <ListItemButton component={Link} href="/" onClick={onNavigate} sx={navItemSx}>
+            <HomeIcon sx={{ mr: 1.5, fontSize: 20 }} />
+            <ListItemText primary="Portfolio" primaryTypographyProps={{ fontWeight: 600 }} />
+          </ListItemButton>
+          <ListItemButton component={Link} href="/vinyl" onClick={onNavigate} sx={navItemSx}>
+            <AlbumIcon sx={{ mr: 1.5, fontSize: 20 }} />
+            <ListItemText primary="Vinyl" primaryTypographyProps={{ fontWeight: 600 }} />
+          </ListItemButton>
+        </List>
+      </Box>
     </Box>
   );
 }
