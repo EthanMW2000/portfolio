@@ -90,12 +90,19 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           const { disc, track: trackNum } = extractDiscAndTrack(file);
           if (trackNum === null) continue;
 
-          const track = record.tracks.find((t) => {
-            if (matchedTrackIds.has(t.id)) return false;
-            if (t.trackNumber !== trackNum) return false;
-            if (hasMultipleDiscs && disc !== null) return t.discNumber === disc;
-            return true;
-          });
+          let track;
+          if (hasMultipleDiscs && disc !== null) {
+            track = record.tracks.find((t) =>
+              !matchedTrackIds.has(t.id) && t.trackNumber === trackNum && t.discNumber === disc,
+            );
+          } else if (hasMultipleDiscs) {
+            track = record.tracks[trackNum - 1] ?? null;
+            if (track && matchedTrackIds.has(track.id)) track = null;
+          } else {
+            track = record.tracks.find((t) =>
+              !matchedTrackIds.has(t.id) && t.trackNumber === trackNum,
+            );
+          }
           if (!track) continue;
 
           matchedTrackIds.add(track.id);
