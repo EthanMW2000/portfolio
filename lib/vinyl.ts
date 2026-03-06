@@ -5,6 +5,7 @@ import {
   DeleteCommand,
   QueryCommand,
   BatchWriteCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { buildDynamoClient } from "@/lib/aws";
 import type {
@@ -127,6 +128,38 @@ export async function deleteRecordAndTracks(id: string): Promise<void> {
   }
 
   await db.send(new DeleteCommand({ TableName: recordsTable, Key: { id } }));
+}
+
+export async function markTrackUploaded(trackId: string, recordId: string): Promise<void> {
+  await db.send(
+    new UpdateCommand({
+      TableName: tracksTable,
+      Key: { id: trackId },
+      UpdateExpression: "SET audioUploaded = :t",
+      ExpressionAttributeValues: { ":t": true },
+    })
+  );
+
+  const result = await db.send(
+    new QueryCommand({
+      TableName: tracksTable,
+      IndexName: "record_id-index",
+      KeyConditionExpression: "recordId = :rid",
+      ExpressionAttributeValues: { ":rid": recordId },
+    })
+  );
+
+  const tracks = (result.Items ?? []) as VinylTrack[];
+  const allUploaded = tracks.length > 0 && tracks.every((t) => t.audioUploaded);
+
+  await db.send(
+    new UpdateCommand({
+      TableName: recordsTable,
+      Key: { id: recordId },
+      UpdateExpression: "SET audioComplete = :v",
+      ExpressionAttributeValues: { ":v": allUploaded },
+    })
+  );
 }
 
 export async function findTrackByMbid(

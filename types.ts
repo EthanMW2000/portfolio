@@ -41,6 +41,7 @@ export interface VinylRecord {
   coverUrl: string | null;
   trackCount: number;
   createdAt: string;
+  audioComplete?: boolean;
 }
 
 export interface VinylTrack {
@@ -51,6 +52,7 @@ export interface VinylTrack {
   discNumber: number;
   duration: number | null;
   mbid: string | null;
+  audioUploaded?: boolean;
 }
 
 export interface VinylRecordWithTracks extends VinylRecord {

@@ -179,6 +179,12 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
         xhr.send(state.file);
       });
 
+      await fetch("/api/vinyl/fingerprint/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trackId: track.id, recordId: record.id }),
+      });
+
       setTrackStates((prev) => ({
         ...prev,
         [track.id]: { ...prev[track.id], status: "done", progress: 100 },
@@ -268,6 +274,8 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           <Typography variant="body2" color="text.secondary" gutterBottom>
             {record.artist}
             {record.year ? ` (${record.year})` : ""}
+            {" — "}
+            {record.tracks.filter((t) => t.audioUploaded).length}/{record.tracks.length} tracks uploaded
           </Typography>
 
           <Button
@@ -296,6 +304,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           <Box sx={{ mt: 1 }}>
             {record.tracks.map((track) => {
               const state = trackStates[track.id];
+              const alreadyUploaded = !!track.audioUploaded;
               return (
                 <Stack
                   key={track.id}
@@ -307,6 +316,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
                     borderBottom: 1,
                     borderColor: "divider",
                     "&:last-child": { borderBottom: 0 },
+                    opacity: alreadyUploaded && state?.status === "idle" && !state?.file ? 0.6 : 1,
                   }}
                 >
                   <Typography
@@ -338,7 +348,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
                         color="secondary"
                       />
                     </Box>
-                  ) : state?.status === "done" ? (
+                  ) : state?.status === "done" || (alreadyUploaded && state?.status === "idle" && !state?.file) ? (
                     <CheckCircleIcon color="success" fontSize="small" />
                   ) : state?.status === "error" ? (
                     <ErrorIcon color="error" fontSize="small" />

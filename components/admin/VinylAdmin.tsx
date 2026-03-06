@@ -412,7 +412,7 @@ export default function VinylAdmin() {
                   <ListItem>
                     <ListItemText
                       primary={record.title}
-                      secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks`}
+                      secondary={`${record.artist}${record.year ? ` (${record.year})` : ""} — ${record.trackCount} tracks${record.audioComplete ? " ✓ audio" : ""}`}
                     />
                     <Stack direction="row" spacing={0.5}>
                       <IconButton
