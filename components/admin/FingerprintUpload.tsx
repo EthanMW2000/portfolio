@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Box,
   Button,
@@ -9,10 +9,6 @@ import {
   Stack,
   Chip,
   LinearProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
   Alert,
   IconButton,
 } from "@mui/material";
@@ -20,6 +16,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import type { VinylRecordWithTracks, VinylTrack } from "@/types";
 
 interface TrackUploadState {
@@ -33,6 +30,11 @@ interface FingerprintUploadProps {
   record: VinylRecordWithTracks;
 }
 
+function extractTrackNumber(filename: string): number | null {
+  const match = filename.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : null;
+}
+
 export default function FingerprintUpload({ record }: FingerprintUploadProps) {
   const [trackStates, setTrackStates] = useState<
     Record<string, TrackUploadState>
@@ -44,12 +46,89 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
     return initial;
   });
   const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   function handleFileSelect(trackId: string, file: File) {
     setTrackStates((prev) => ({
       ...prev,
       [trackId]: { ...prev[trackId], file, status: "idle", progress: 0 },
     }));
+  }
+
+  const matchFilesToTracks = useCallback(
+    (files: File[]) => {
+      const sorted = [...files].sort((a, b) => a.name.localeCompare(b.name));
+      let matched = 0;
+
+      setTrackStates((prev) => {
+        const next = { ...prev };
+
+        for (const file of sorted) {
+          const num = extractTrackNumber(file.name);
+          if (num === null) continue;
+
+          const track = record.tracks.find((t) => t.trackNumber === num);
+          if (!track) continue;
+
+          next[track.id] = { ...next[track.id], file, status: "idle", progress: 0 };
+          matched++;
+        }
+
+        if (matched === 0) {
+          for (let i = 0; i < sorted.length && i < record.tracks.length; i++) {
+            const track = record.tracks[i];
+            next[track.id] = {
+              ...next[track.id],
+              file: sorted[i],
+              status: "idle",
+              progress: 0,
+            };
+            matched++;
+          }
+        }
+
+        return next;
+      });
+
+      return matched;
+    },
+    [record.tracks],
+  );
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files).filter((f) =>
+      f.type.startsWith("audio/") || /\.(mp3|wav|flac|m4a|ogg|aac)$/i.test(f.name),
+    );
+
+    if (files.length === 0) {
+      setError("No audio files found");
+      return;
+    }
+
+    const matched = matchFilesToTracks(files);
+    if (matched === 0) {
+      setError("Could not match any files to tracks");
+    }
+  }
+
+  function handleFolderSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []).filter((f) =>
+      f.type.startsWith("audio/") || /\.(mp3|wav|flac|m4a|ogg|aac)$/i.test(f.name),
+    );
+    e.target.value = "";
+
+    if (files.length === 0) {
+      setError("No audio files found");
+      return;
+    }
+
+    const matched = matchFilesToTracks(files);
+    if (matched === 0) {
+      setError("Could not match any files to tracks");
+    }
   }
 
   async function uploadTrack(track: VinylTrack) {
@@ -79,7 +158,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("PUT", uploadUrl);
-        xhr.setRequestHeader("Content-Type", state.file!.type || "audio/wav");
+        xhr.setRequestHeader("Content-Type", state.file!.type || "audio/mpeg");
 
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
@@ -147,11 +226,11 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "center",
-        p: { xs: 2, sm: 4 },
+        p: { xs: 1, sm: 4 },
         pt: { xs: 4, sm: 8 },
       }}
     >
-      <Box sx={{ width: "100%", maxWidth: 700 }}>
+      <Box sx={{ width: "100%", maxWidth: 800 }}>
         <Stack direction="row" alignItems="center" spacing={1} mb={3}>
           <IconButton href="/admin/vinyl" color="secondary">
             <ArrowBackIcon />
@@ -159,7 +238,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           <Typography
             variant="h4"
             color="text.primary"
-            sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
+            sx={{ fontSize: { xs: "1.3rem", sm: "2rem" } }}
           >
             Upload Audio
           </Typography>
@@ -171,7 +250,18 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
           </Alert>
         )}
 
-        <Paper sx={{ p: 3, mb: 3 }}>
+        <Paper
+          sx={{
+            p: { xs: 1.5, sm: 3 },
+            mb: 3,
+            border: dragOver ? 2 : 0,
+            borderColor: "secondary.main",
+            borderStyle: "dashed",
+          }}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+        >
           <Typography variant="h6" gutterBottom>
             {record.title}
           </Typography>
@@ -180,88 +270,130 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
             {record.year ? ` (${record.year})` : ""}
           </Typography>
 
-          <Table size="small" sx={{ mt: 2 }}>
-            <TableBody>
-              {record.tracks.map((track) => {
-                const state = trackStates[track.id];
-                return (
-                  <TableRow key={track.id}>
-                    <TableCell sx={{ width: 30, px: 0.5 }}>
-                      {track.trackNumber}
-                    </TableCell>
-                    <TableCell sx={{ px: 0.5 }}>
-                      <Typography variant="body2">{track.title}</Typography>
-                    </TableCell>
-                    <TableCell sx={{ width: 200 }}>
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        {state?.status === "done" ? (
-                          <CheckCircleIcon
-                            color="success"
-                            fontSize="small"
-                          />
-                        ) : state?.status === "error" ? (
-                          <ErrorIcon color="error" fontSize="small" />
-                        ) : null}
+          <Button
+            component="label"
+            size="small"
+            variant="outlined"
+            color="secondary"
+            startIcon={<FolderOpenIcon />}
+            sx={{ mt: 1, mb: 2 }}
+          >
+            Select Folder
+            <input
+              type="file"
+              hidden
+              multiple
+              accept="audio/*"
+              onChange={handleFolderSelect}
+              {...({ webkitdirectory: "", directory: "" } as React.InputHTMLAttributes<HTMLInputElement>)}
+            />
+          </Button>
 
-                        {state?.status === "uploading" && (
-                          <Box sx={{ flex: 1 }}>
-                            <LinearProgress
-                              variant="determinate"
-                              value={state.progress}
-                              color="secondary"
-                            />
-                          </Box>
-                        )}
+          <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
+            or drag & drop audio files here
+          </Typography>
 
-                        {state?.file && state.status !== "uploading" && (
-                          <Chip
-                            label={state.file.name}
-                            size="small"
-                            variant="outlined"
-                            color={
-                              state.status === "done"
-                                ? "success"
-                                : state.status === "error"
-                                  ? "error"
-                                  : "default"
-                            }
-                          />
-                        )}
+          <Box sx={{ mt: 1 }}>
+            {record.tracks.map((track) => {
+              const state = trackStates[track.id];
+              return (
+                <Stack
+                  key={track.id}
+                  direction="row"
+                  alignItems="center"
+                  spacing={1}
+                  sx={{
+                    py: 0.75,
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    "&:last-child": { borderBottom: 0 },
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ width: 24, textAlign: "right", flexShrink: 0 }}
+                  >
+                    {track.trackNumber}
+                  </Typography>
 
-                        {state?.status !== "uploading" && (
-                          <Button
-                            component="label"
-                            size="small"
-                            variant="outlined"
-                            color="secondary"
-                            startIcon={<UploadFileIcon />}
-                          >
-                            {state?.file ? "Replace" : "Select"}
-                            <input
-                              type="file"
-                              hidden
-                              accept="audio/*"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) handleFileSelect(track.id, file);
-                                e.target.value = "";
-                              }}
-                            />
-                          </Button>
-                        )}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {track.title}
+                  </Typography>
 
-                        {state?.status === "error" && state.error && (
-                          <Typography variant="caption" color="error">
-                            {state.error}
-                          </Typography>
-                        )}
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                  {state?.status === "uploading" ? (
+                    <Box sx={{ width: 120, flexShrink: 0 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={state.progress}
+                        color="secondary"
+                      />
+                    </Box>
+                  ) : state?.status === "done" ? (
+                    <CheckCircleIcon color="success" fontSize="small" />
+                  ) : state?.status === "error" ? (
+                    <ErrorIcon color="error" fontSize="small" />
+                  ) : null}
+
+                  {state?.file && state.status !== "uploading" && (
+                    <Chip
+                      label={state.file.name}
+                      size="small"
+                      variant="outlined"
+                      sx={{
+                        maxWidth: { xs: 100, sm: 200 },
+                        "& .MuiChip-label": {
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        },
+                      }}
+                      color={
+                        state.status === "done"
+                          ? "success"
+                          : state.status === "error"
+                            ? "error"
+                            : "default"
+                      }
+                    />
+                  )}
+
+                  {state?.status !== "uploading" && (
+                    <Button
+                      component="label"
+                      size="small"
+                      variant="outlined"
+                      color="secondary"
+                      sx={{ flexShrink: 0, minWidth: 0, px: 1 }}
+                      startIcon={<UploadFileIcon />}
+                    >
+                      <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+                        {state?.file ? "Replace" : "Select"}
+                      </Box>
+                      <input
+                        type="file"
+                        hidden
+                        accept="audio/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleFileSelect(track.id, file);
+                          e.target.value = "";
+                        }}
+                      />
+                    </Button>
+                  )}
+                </Stack>
+              );
+            })}
+          </Box>
         </Paper>
 
         <Button

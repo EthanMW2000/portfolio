@@ -235,26 +235,29 @@ export default function VinylAdmin() {
           <Typography variant="h6" gutterBottom>
             Import from MusicBrainz
           </Typography>
-          <Stack direction="row" spacing={2}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Album title..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Artist (optional)"
-              value={artistQuery}
-              onChange={(e) => setArtistQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={2}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Album title..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Artist..."
+                value={artistQuery}
+                onChange={(e) => setArtistQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+            </Stack>
             <Button
               variant="contained"
               color="secondary"
+              fullWidth
               onClick={handleSearch}
               disabled={searching || (!query.trim() && !artistQuery.trim())}
               startIcon={<SearchIcon />}
