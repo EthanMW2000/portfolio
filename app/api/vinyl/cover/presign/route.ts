@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid recordId" }, { status: 400 });
   }
 
-  const key = `vinyl/covers/${recordId}.jpg`;
+  const key = `vinyl/covers/${recordId}-${Date.now()}.jpg`;
   const uploadUrl = await getUploadPresignedUrl(key);
   const coverUrl = cdnUrl(key);
 

@@ -113,7 +113,7 @@ export default function VinylEditModal({ record, open, onClose, onSaved }: Props
         });
 
         albumFields.coverKey = key;
-        albumFields.coverUrl = `${coverUrl}?v=${Date.now()}`;
+        albumFields.coverUrl = coverUrl;
       }
 
       let updatedRecord = record;
