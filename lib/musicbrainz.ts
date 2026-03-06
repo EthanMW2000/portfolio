@@ -28,30 +28,61 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function searchReleases(query: string): Promise<MBRelease[]> {
+function parseReleases(releases: unknown[]): MBRelease[] {
+  return (releases as {
+    id: string;
+    title: string;
+    "artist-credit"?: { name: string }[];
+    date?: string;
+    "track-count"?: number;
+  }[]).map((r) => ({
+    id: r.id,
+    title: r.title,
+    artist: r["artist-credit"]?.[0]?.name ?? "Unknown Artist",
+    year: r.date ? parseInt(r.date.slice(0, 4), 10) || null : null,
+    trackCount: r["track-count"] ?? 0,
+  }));
+}
+
+export async function searchReleases(
+  query: string,
+  artist?: string,
+): Promise<MBRelease[]> {
+  let lucene = query;
+  if (artist) {
+    lucene = `release:"${query}" AND artist:"${artist}"`;
+  }
+
   const res = await mbFetch(
-    `/release?query=${encodeURIComponent(query)}&fmt=json&limit=10`
+    `/release?query=${encodeURIComponent(lucene)}&fmt=json&limit=25`
   );
   if (!res.ok) return [];
 
   const data = await res.json();
-  const releases = data.releases ?? [];
+  return parseReleases(data.releases ?? []);
+}
 
-  return releases.map(
-    (r: {
-      id: string;
-      title: string;
-      "artist-credit"?: { name: string }[];
-      date?: string;
-      "track-count"?: number;
-    }) => ({
-      id: r.id,
-      title: r.title,
-      artist: r["artist-credit"]?.[0]?.name ?? "Unknown Artist",
-      year: r.date ? parseInt(r.date.slice(0, 4), 10) || null : null,
-      trackCount: r["track-count"] ?? 0,
-    })
+export async function searchArtistReleases(
+  artist: string,
+): Promise<MBRelease[]> {
+  const artistRes = await mbFetch(
+    `/artist?query=${encodeURIComponent(artist)}&fmt=json&limit=1`
   );
+  if (!artistRes.ok) return [];
+
+  const artistData = await artistRes.json();
+  const artistId = artistData.artists?.[0]?.id;
+  if (!artistId) return [];
+
+  await sleep(1100);
+
+  const res = await mbFetch(
+    `/release?artist=${artistId}&type=album&fmt=json&limit=100`
+  );
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  return parseReleases(data.releases ?? []);
 }
 
 export async function getReleaseTracks(

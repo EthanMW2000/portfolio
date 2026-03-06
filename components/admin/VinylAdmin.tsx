@@ -52,6 +52,7 @@ function formatDuration(seconds: number | null): string {
 
 export default function VinylAdmin() {
   const [query, setQuery] = useState("");
+  const [artistQuery, setArtistQuery] = useState("");
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<MBRelease[]>([]);
   const [importing, setImporting] = useState<string | null>(null);
@@ -81,7 +82,7 @@ export default function VinylAdmin() {
   }
 
   async function handleSearch() {
-    if (!query.trim()) return;
+    if (!query.trim() && !artistQuery.trim()) return;
     setSearching(true);
     setResults([]);
     setImportResult(null);
@@ -90,9 +91,10 @@ export default function VinylAdmin() {
     setError(null);
 
     try {
-      const res = await fetch(
-        `/api/vinyl/search?q=${encodeURIComponent(query)}`
-      );
+      const params = new URLSearchParams();
+      if (query.trim()) params.set("q", query);
+      if (artistQuery.trim()) params.set("artist", artistQuery);
+      const res = await fetch(`/api/vinyl/search?${params}`);
       if (!res.ok) throw new Error("Search failed");
       const data = await res.json();
       setResults(data.releases);
@@ -237,16 +239,24 @@ export default function VinylAdmin() {
             <TextField
               fullWidth
               size="small"
-              placeholder="Search for an album..."
+              placeholder="Album title..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Artist (optional)"
+              value={artistQuery}
+              onChange={(e) => setArtistQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <Button
               variant="contained"
               color="secondary"
               onClick={handleSearch}
-              disabled={searching || !query.trim()}
+              disabled={searching || (!query.trim() && !artistQuery.trim())}
               startIcon={<SearchIcon />}
             >
               Search
