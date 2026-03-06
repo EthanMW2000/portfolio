@@ -25,12 +25,14 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import AlbumIcon from "@mui/icons-material/Album";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import type { VinylRecord } from "@/types";
+import type { VinylRecord, VinylRecordWithTracks } from "@/types";
+import VinylEditModal from "./VinylEditModal";
 import type { MBRelease, MBTrack } from "@/lib/musicbrainz";
 
 interface ImportResult {
@@ -63,6 +65,7 @@ export default function VinylAdmin() {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [previews, setPreviews] = useState<Record<string, ReleasePreview>>({});
   const [loadingPreviews, setLoadingPreviews] = useState<Set<string>>(new Set());
+  const [editingRecord, setEditingRecord] = useState<VinylRecordWithTracks | null>(null);
 
   useEffect(() => {
     fetchCollection();
@@ -181,6 +184,24 @@ export default function VinylAdmin() {
     } catch {
       setError("Delete failed");
     }
+  }
+
+  async function handleEdit(id: string) {
+    try {
+      const res = await fetch(`/api/vinyl/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch record");
+      const data: VinylRecordWithTracks = await res.json();
+      setEditingRecord(data);
+    } catch {
+      setError("Failed to load record for editing");
+    }
+  }
+
+  function handleEditSaved(updated: VinylRecordWithTracks) {
+    setRecords((prev) =>
+      prev.map((r) => (r.id === updated.id ? { ...r, ...updated } : r))
+    );
+    setEditingRecord(null);
   }
 
   async function handleLogout() {
@@ -324,33 +345,56 @@ export default function VinylAdmin() {
                               </Box>
                             )}
                             <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
-                              <Table size="small">
-                                <TableBody>
-                                  {preview.tracks.map((track) => (
-                                    <TableRow key={`${track.discNumber}-${track.trackNumber}`}>
-                                      <TableCell sx={{ width: 30, px: 0.5 }}>
-                                        {track.trackNumber}
-                                      </TableCell>
-                                      <TableCell sx={{ px: 0.5 }}>
-                                        <Typography variant="body2" noWrap>
-                                          {track.title}
-                                        </Typography>
-                                      </TableCell>
-                                      <TableCell
-                                        align="right"
-                                        sx={{ width: 50, px: 0.5 }}
+                              {(() => {
+                                const discs = new Map<number, typeof preview.tracks>();
+                                for (const track of preview.tracks) {
+                                  const list = discs.get(track.discNumber) ?? [];
+                                  list.push(track);
+                                  discs.set(track.discNumber, list);
+                                }
+                                const multiDisc = discs.size > 1;
+
+                                return Array.from(discs.entries()).map(([discNum, discTracks]) => (
+                                  <Box key={discNum}>
+                                    {multiDisc && (
+                                      <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        sx={{ display: "block", mt: discNum > 1 ? 1.5 : 0, mb: 0.5 }}
                                       >
-                                        <Typography
-                                          variant="body2"
-                                          color="text.secondary"
-                                        >
-                                          {formatDuration(track.duration)}
-                                        </Typography>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
+                                        Disc {discNum}
+                                      </Typography>
+                                    )}
+                                    <Table size="small">
+                                      <TableBody>
+                                        {discTracks.map((track) => (
+                                          <TableRow key={`${track.discNumber}-${track.trackNumber}`}>
+                                            <TableCell sx={{ width: 30, px: 0.5 }}>
+                                              {track.trackNumber}
+                                            </TableCell>
+                                            <TableCell sx={{ px: 0.5 }}>
+                                              <Typography variant="body2" noWrap>
+                                                {track.title}
+                                              </Typography>
+                                            </TableCell>
+                                            <TableCell
+                                              align="right"
+                                              sx={{ width: 50, px: 0.5 }}
+                                            >
+                                              <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                              >
+                                                {formatDuration(track.duration)}
+                                              </Typography>
+                                            </TableCell>
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </Box>
+                                ));
+                              })()}
                             </Box>
                           </Stack>
                         )}
@@ -416,6 +460,13 @@ export default function VinylAdmin() {
                     />
                     <Stack direction="row" spacing={0.5}>
                       <IconButton
+                        onClick={() => handleEdit(record.id)}
+                        color="secondary"
+                        size="small"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
                         href={`/admin/vinyl/${record.id}/fingerprint`}
                         color="secondary"
                         size="small"
@@ -437,6 +488,15 @@ export default function VinylAdmin() {
             </List>
           )}
         </Paper>
+
+        {editingRecord && (
+          <VinylEditModal
+            record={editingRecord}
+            open={true}
+            onClose={() => setEditingRecord(null)}
+            onSaved={handleEditSaved}
+          />
+        )}
       </Box>
     </Box>
   );

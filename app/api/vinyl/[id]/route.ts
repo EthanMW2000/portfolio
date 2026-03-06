@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth";
-import { getRecordWithTracks, deleteRecordAndTracks } from "@/lib/vinyl";
+import { getRecordWithTracks, deleteRecordAndTracks, updateRecord } from "@/lib/vinyl";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,33 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     console.error("Vinyl detail error:", err);
     return NextResponse.json(
       { error: "Failed to fetch record" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
+  const sessionOrResponse = await requireSession(request);
+  if (sessionOrResponse instanceof NextResponse) return sessionOrResponse;
+
+  const { id } = await params;
+  const body = await request.json();
+  const { title, artist, year, coverKey, coverUrl } = body as {
+    title?: string;
+    artist?: string;
+    year?: number | null;
+    coverKey?: string | null;
+    coverUrl?: string | null;
+  };
+
+  try {
+    await updateRecord(id, { title, artist, year, coverKey, coverUrl });
+    const updated = await getRecordWithTracks(id);
+    return NextResponse.json(updated);
+  } catch (err) {
+    console.error("Vinyl update error:", err);
+    return NextResponse.json(
+      { error: "Failed to update record" },
       { status: 500 }
     );
   }

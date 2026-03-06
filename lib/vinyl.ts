@@ -162,6 +162,66 @@ export async function markTrackUploaded(trackId: string, recordId: string): Prom
   );
 }
 
+export async function updateRecord(
+  id: string,
+  fields: Partial<Pick<VinylRecord, "title" | "artist" | "year" | "coverKey" | "coverUrl">>
+): Promise<void> {
+  const entries = Object.entries(fields).filter(([, v]) => v !== undefined);
+  if (entries.length === 0) return;
+
+  const names: Record<string, string> = {};
+  const values: Record<string, unknown> = {};
+  const parts: string[] = [];
+
+  for (const [key, val] of entries) {
+    const alias = `#${key}`;
+    const placeholder = `:${key}`;
+    names[alias] = key;
+    values[placeholder] = val;
+    parts.push(`${alias} = ${placeholder}`);
+  }
+
+  await db.send(
+    new UpdateCommand({
+      TableName: recordsTable,
+      Key: { id },
+      UpdateExpression: `SET ${parts.join(", ")}`,
+      ExpressionAttributeNames: names,
+      ExpressionAttributeValues: values,
+    })
+  );
+}
+
+export async function updateTrack(
+  id: string,
+  fields: Partial<Pick<VinylTrack, "title" | "trackNumber">>
+): Promise<void> {
+  const entries = Object.entries(fields).filter(([, v]) => v !== undefined);
+  if (entries.length === 0) return;
+
+  const names: Record<string, string> = {};
+  const values: Record<string, unknown> = {};
+  const parts: string[] = [];
+
+  for (const [key, val] of entries) {
+    const alias = `#${key}`;
+    const placeholder = `:${key}`;
+    names[alias] = key;
+    values[placeholder] = val;
+    parts.push(`${alias} = ${placeholder}`);
+  }
+
+  await db.send(
+    new UpdateCommand({
+      TableName: tracksTable,
+      Key: { id },
+      UpdateExpression: `SET ${parts.join(", ")}`,
+      ExpressionAttributeNames: names,
+      ExpressionAttributeValues: values,
+    })
+  );
+}
+
 export async function findTrackByMbid(
   mbid: string
 ): Promise<VinylTrack | null> {

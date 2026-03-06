@@ -30,9 +30,27 @@ interface FingerprintUploadProps {
   record: VinylRecordWithTracks;
 }
 
-function extractTrackNumber(filename: string): number | null {
-  const match = filename.match(/^(\d+)/);
-  return match ? parseInt(match[1], 10) : null;
+function extractDiscAndTrack(file: File): { disc: number | null; track: number | null } {
+  const path = file.webkitRelativePath || file.name;
+
+  const discFromPath = path.match(/(?:dis[ck]|cd)\s*(\d+)/i);
+  const disc = discFromPath ? parseInt(discFromPath[1], 10) : null;
+
+  const basename = path.split("/").pop() ?? "";
+
+  const discTrackPrefix = basename.match(/^(\d+)-(\d+)/);
+  if (discTrackPrefix) {
+    return {
+      disc: disc ?? parseInt(discTrackPrefix[1], 10),
+      track: parseInt(discTrackPrefix[2], 10),
+    };
+  }
+
+  const trackMatch = basename.match(/^(\d+)/);
+  return {
+    disc,
+    track: trackMatch ? parseInt(trackMatch[1], 10) : null,
+  };
 }
 
 export default function FingerprintUpload({ record }: FingerprintUploadProps) {
@@ -55,21 +73,32 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
     }));
   }
 
+  const hasMultipleDiscs = record.tracks.some((t) => t.discNumber > 1);
+
   const matchFilesToTracks = useCallback(
     (files: File[]) => {
-      const sorted = [...files].sort((a, b) => a.name.localeCompare(b.name));
+      const sorted = [...files].sort((a, b) =>
+        (a.webkitRelativePath || a.name).localeCompare(b.webkitRelativePath || b.name),
+      );
       let matched = 0;
 
       setTrackStates((prev) => {
         const next = { ...prev };
+        const matchedTrackIds = new Set<string>();
 
         for (const file of sorted) {
-          const num = extractTrackNumber(file.name);
-          if (num === null) continue;
+          const { disc, track: trackNum } = extractDiscAndTrack(file);
+          if (trackNum === null) continue;
 
-          const track = record.tracks.find((t) => t.trackNumber === num);
+          const track = record.tracks.find((t) => {
+            if (matchedTrackIds.has(t.id)) return false;
+            if (t.trackNumber !== trackNum) return false;
+            if (hasMultipleDiscs && disc !== null) return t.discNumber === disc;
+            return true;
+          });
           if (!track) continue;
 
+          matchedTrackIds.add(track.id);
           next[track.id] = { ...next[track.id], file, status: "idle", progress: 0 };
           matched++;
         }
@@ -92,7 +121,7 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
 
       return matched;
     },
-    [record.tracks],
+    [record.tracks, hasMultipleDiscs],
   );
 
   function handleDrop(e: React.DragEvent) {
@@ -322,9 +351,11 @@ export default function FingerprintUpload({ record }: FingerprintUploadProps) {
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ width: 24, textAlign: "right", flexShrink: 0 }}
+                    sx={{ width: 32, textAlign: "right", flexShrink: 0 }}
                   >
-                    {track.trackNumber}
+                    {hasMultipleDiscs
+                      ? `${track.discNumber}.${track.trackNumber}`
+                      : track.trackNumber}
                   </Typography>
 
                   <Typography
