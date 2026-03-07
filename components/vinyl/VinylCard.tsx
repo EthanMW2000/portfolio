@@ -19,12 +19,14 @@ export default function VinylCard({ record }: VinylCardProps) {
     <Box
       sx={{
         position: "relative",
-        "&:hover .vinyl-disc": {
-          transform: "translateX(30%)",
-        },
-        "&:hover .vinyl-sleeve": {
-          transform: "translateY(-4px) scale(1.01) rotate(1.5deg)",
-          boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
+        "@media (hover: hover)": {
+          "&:hover .vinyl-disc": {
+            transform: "translateX(30%)",
+          },
+          "&:hover .vinyl-sleeve": {
+            transform: "translateY(-4px) scale(1.01) rotate(1.5deg)",
+            boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
+          },
         },
       }}
     >
