@@ -5,10 +5,11 @@
       "employer": "INVISTA",
       "duration": "July 2023 - Current",
       "descriptions": [
-        "Lead development on the Digital Twin innovation project within INVISTA",
-        "Created architecture diagrams that facilitated scalable and maintainable software solutions",
-        "Collaborated with Operators to design an application that empowers them and aids their efficiency",
-        "Connected with Project Managers and Site Champions to plan out timelines for high priority features"
+        "Led development of an enterprise Digital Twin platform integrating Matterport 3D twins and Neo4j across multiple industrial sites",
+        "Built and extended ETL pipelines ingesting operations data from third-party systems (procedures, sensor data, engineering drawings) into Neo4j, powering the Digital Twin and AI chat assistants",
+        "Reduced time to ship new AI agents from days to hours, enabling the team to rapidly scale the platform",
+        "Eliminated manual deployments across all agent services through automated CI/CD and infrastructure-as-code",
+        "Established Claude Code as the team's primary development workflow, setting up the codebase and tooling to maximize AI-assisted development"
       ],
       "technologies": [
         "TypeScript",
@@ -25,11 +26,11 @@
       "employer": "StaffWise",
       "duration": "April 2022 - July 2023",
       "descriptions": [
-        "Enforcing TDD using Clean Architecture for maintainable and testable code",
-        "Constructing and executing state-based database development in Microsoft SQL Server",
-        "Implementing UI designs using React.js and REST API's in Node.js",
-        "Architecting resources and services in Microsoft Azure using Terraform",
-        "Collaborating with a team to guarantee continuous integration and deployment"
+        "Applied TDD and Clean Architecture to produce a maintainable, well-tested codebase",
+        "Managed state-based SQL Server migrations, ensuring safe and reproducible schema changes",
+        "Delivered production React UIs and Node.js REST APIs from design through deployment",
+        "Provisioned Azure infrastructure with Terraform, standardizing environments and eliminating manual configuration",
+        "Maintained CI/CD pipelines ensuring reliable automated delivery across the team"
       ],
       "technologies": [
         "Node.js",
@@ -39,61 +40,51 @@
         "Terraform",
         "Azure"
       ]
-    },
-    {
-      "title": "Software Engineer Intern",
-      "employer": "Nuvative",
-      "duration": "April 2023 - July 2023",
-      "descriptions": [
-        "Improved unit test coverage on multiple vital microservices by 20+%",
-        "Contributed to C# microservices designed around business domains, emphasizing clean architecture and scalable design",
-        "Followed Atomic Design principles to construct reusable React components for UI"
-      ],
-      "technologies": [
-        "TypeScript",
-        "React",
-        "Microsoft SQL Server",
-        "C#",
-        ".NET"
-      ]
-    },
-    {
-      "title": "Software Developer Intern",
-      "employer": "Pillr",
-      "duration": "November 2022 - March 2023",
-      "descriptions": [
-        "Implemented UI for our endpoint management process flow in Vue.js",
-        "Handled third party webhooks to ingest data using Python and Celery"
-      ],
-      "technologies": ["Vue", "TypeScript", "Python", "Celery"]
     }
   ],
   "projects": [
+    {
+      "name": "Spectrum Analyzer",
+      "type": "Desktop Application",
+      "description": [
+        "Built a real-time 32-band FFT spectrum visualizer running on a Raspberry Pi",
+        "Integrated on-device song identification using Olaf audio fingerprinting"
+      ],
+      "technologies": [
+        "Python",
+        "numpy",
+        "pygame",
+        "ffmpeg",
+        "S3"
+      ]
+    },
+    {
+      "name": "Photography Infrastructure",
+      "type": "Cloud Infrastructure",
+      "description": [
+        "Built a serverless image processing pipeline that auto-converts full-res uploads to web and thumbnail formats on arrival",
+        "Provisioned S3, Lambda, and IAM resources as code via AWS SAM with CI/CD through GitHub Actions"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Node.js",
+        "AWS Lambda",
+        "S3",
+        "AWS SAM",
+        "GitHub Actions"
+      ]
+    },
     {
       "name": "Astrorpheus",
       "type": "Web Application",
       "description": [
         "Designed and implemented 3D point cloud viewer using React Three Fiber",
-        "Retrieved and served 3D point cloud models and audio files from S3",
-        "Collaborated with a team on a strict deadline and won 1st in the NASA Spaces App Challenge in Wichita, KS"
+        "Won 1st place at the NASA Space Apps Challenge, Wichita, KS"
       ],
       "technologies": [
         "TypeScript",
         "React",
         "Python"
-      ]
-    },
-    {
-      "name": "GymArc",
-      "type": "Mobile Application",
-      "description": [
-        "Implemented UI in React Native and GraphQL API in Go"
-      ],
-      "technologies": [
-        "React Native",
-        "TypeScript",
-        "GraphQL",
-        "Go"
       ]
     }
   ]

@@ -14,6 +14,7 @@ const skillCategories = [
   { label: "Database", items: skills.database },
   { label: "Infrastructure", items: skills.infrastructure },
   { label: "Other", items: skills.other },
+  { label: "AI Tools", items: skills.ai_tools },
 ];
 
 export function About() {
@@ -37,9 +38,10 @@ export function About() {
               </Typography>
               <Typography variant="body1">
                 I graduated from Wichita State University with a Bachelor of Science
-                in Computer Science. Currently, I&apos;m a software engineer at
-                INVISTA, where I lead development on a Digital Twin innovation project
-                that helps operators make better decisions on the plant floor.
+                in Computer Science. At INVISTA, I build systems that let plant
+                operators talk to their factory — a multi-agent AI platform connecting
+                work orders, sensor data, and engineering docs through natural language,
+                running on top of an enterprise Digital Twin.
               </Typography>
               <Typography variant="body1">
                 Outside of work, you&apos;ll find me behind the camera or working on
