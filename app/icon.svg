@@ -1,0 +1,8 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="e" d="M 0,0 H 40 V 11 H 11 V 18 H 33 V 30 H 11 V 37 H 40 V 48 H 0 Z"/>
+  </defs>
+  <use href="#e" transform="translate(16,12)" fill="#1b2541"/>
+  <use href="#e" transform="translate(12,8)" fill="#037580"/>
+  <use href="#e" transform="translate(8,4)" fill="#05a3b0"/>
+</svg>
