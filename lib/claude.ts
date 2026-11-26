@@ -11,7 +11,7 @@ export interface RecordPhotoInfo {
 
 const PROMPT = `These are photos of a vinyl record sleeve: the front cover, and possibly the back.
 Read what is printed on them.
-- artist and title: as printed on the sleeve. If the artist isn't printed but you clearly recognize the album cover, give the artist. For soundtracks or compilations with no single artist, use the composer if credited, else "Various Artists".
+- artist and title: as printed on the sleeve. Many covers print only the title or nothing at all; use your knowledge of album artwork to name the artist (and title) when you recognize the cover, and use null only if you don't. For soundtracks or compilations with no single artist, use the composer if credited, else "Various Artists".
 - barcode: the UPC/EAN digits printed under the barcode (digits only), or null if no barcode is readable.
 - catalogNumber: the label's catalog number (often on the spine or back, e.g. "XL 540", "B0012345-01"), or null.
 - label: the record label name, or null.

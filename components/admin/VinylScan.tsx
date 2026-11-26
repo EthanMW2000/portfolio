@@ -301,6 +301,7 @@ export default function VinylScan() {
       value={extracted?.[key] ?? ""}
       onChange={(e) => setExtracted((prev) => ({ ...prev!, [key]: e.target.value || null }))}
       inputProps={numeric ? { inputMode: "numeric" } : undefined}
+      helperText={key === "artist" && !extracted?.artist ? "Not read from the photo. Type it for better matches." : undefined}
     />
   );
 
