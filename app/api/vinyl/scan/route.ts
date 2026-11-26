@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth";
 import { readRecordPhotos, type RecordPhotoInfo } from "@/lib/claude";
-import { lookupReleases, normalizeName as normalize } from "@/lib/musicbrainz";
+import { lookupReleases } from "@/lib/musicbrainz";
 import { getAllRecords } from "@/lib/vinyl";
 
 export const maxDuration = 60;
+
+const NON_WORD = new RegExp("[^\\p{L}\\p{N}]+", "gu");
+
+function normalize(value: string): string {
+  return value.toLowerCase().replace(NON_WORD, "");
+}
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
