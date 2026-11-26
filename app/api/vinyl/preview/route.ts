@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth";
 import { getReleaseDetails, findCoverArt } from "@/lib/musicbrainz";
 
+export const maxDuration = 60;
+
 export async function GET(request: NextRequest) {
   const sessionOrResponse = await requireSession(request);
   if (sessionOrResponse instanceof NextResponse) return sessionOrResponse;
