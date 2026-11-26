@@ -15,7 +15,7 @@ Read what is printed on them.
 - barcode: the UPC/EAN digits printed under the barcode (digits only), or null if no barcode is readable.
 - catalogNumber: the label's catalog number (often on the spine or back, e.g. "XL 540", "B0012345-01"), or null.
 - label: the record label name, or null.
-Use null for anything you can't read; don't guess.`;
+For barcode, catalogNumber and label, use null if you can't read it; don't guess.`;
 
 export async function readRecordPhotos(
   images: { data: string; mediaType: string }[]
