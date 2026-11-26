@@ -303,14 +303,17 @@ export async function getCoverArtUrl(
   return coverArtArchiveFront(`release/${releaseId}`);
 }
 
-function normalizeName(value: string): string {
+const COMBINING_MARKS = new RegExp("\\p{M}", "gu");
+const NON_WORD = new RegExp("[^\\p{L}\\p{N}]+", "gu");
+
+export function normalizeName(value: string): string {
   return value
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(COMBINING_MARKS, "")
     .replace(/\(.*?\)|\[.*?\]/g, " ")
     .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, " ")
+    .replace(NON_WORD, " ")
     .trim();
 }
 

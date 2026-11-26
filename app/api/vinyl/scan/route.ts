@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth";
 import { readRecordPhotos, type RecordPhotoInfo } from "@/lib/claude";
-import { lookupReleases } from "@/lib/musicbrainz";
+import { lookupReleases, normalizeName as normalize } from "@/lib/musicbrainz";
 import { getAllRecords } from "@/lib/vinyl";
 
 export const maxDuration = 60;
@@ -11,10 +11,6 @@ const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 interface ScanImage {
   data: string;
   mediaType: string;
-}
-
-function normalize(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 export async function POST(request: NextRequest) {
