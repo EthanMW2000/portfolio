@@ -27,6 +27,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AlbumIcon from "@mui/icons-material/Album";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import type { VinylRecord, VinylRecordWithTracks } from "@/types";
@@ -109,7 +110,8 @@ export default function VinylAdmin() {
     }
   }
 
-  async function handleExpand(releaseId: string) {
+  async function handleExpand(release: MBRelease) {
+    const releaseId = release.id;
     setExpandedIds((prev) => {
       const next = new Set(prev);
       if (next.has(releaseId)) {
@@ -124,9 +126,12 @@ export default function VinylAdmin() {
 
     setLoadingPreviews((prev) => new Set(prev).add(releaseId));
     try {
-      const res = await fetch(
-        `/api/vinyl/preview?id=${encodeURIComponent(releaseId)}`
-      );
+      const params = new URLSearchParams({
+        id: releaseId,
+        artist: release.artist,
+        title: release.title,
+      });
+      const res = await fetch(`/api/vinyl/preview?${params}`);
       if (!res.ok) throw new Error("Preview failed");
       const data = await res.json();
       setPreviews((prev) => ({ ...prev, [releaseId]: data }));
@@ -236,7 +241,16 @@ export default function VinylAdmin() {
           >
             Vinyl Collection
           </Typography>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" justifyContent="flex-end">
+            <Button
+              startIcon={<PhotoCameraIcon />}
+              href="/admin/vinyl/scan"
+              variant="contained"
+              color="secondary"
+              size="small"
+            >
+              Add from Photo
+            </Button>
             <Button
               startIcon={<AlbumIcon />}
               onClick={() => setShowAddModal(true)}
@@ -317,7 +331,7 @@ export default function VinylAdmin() {
                         gap: 1,
                         cursor: "pointer",
                       }}
-                      onClick={() => handleExpand(release.id)}
+                      onClick={() => handleExpand(release)}
                     >
                       <ListItemText
                         primary={release.title}
