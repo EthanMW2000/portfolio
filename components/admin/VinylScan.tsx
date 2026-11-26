@@ -433,7 +433,7 @@ export default function VinylScan() {
                 <Stack spacing={1}>
                   {candidates.map((c) => {
                     const isSelected = selected?.id === c.id;
-                    const details = [c.year, c.country, c.format, [c.label, c.catalogNumber].filter(Boolean).join(" ")]
+                    const details = [c.year, c.country, c.format, [c.label, c.catalogNumber].filter(Boolean).join(" "), c.barcode]
                       .filter(Boolean)
                       .join(" · ");
                     return (
