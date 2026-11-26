@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("Release lookup error:", err);
     return NextResponse.json(
-      { error: "MusicBrainz lookup failed", extracted },
+      { error: "MusicBrainz didn't answer. Tap Search again in a moment.", extracted },
       { status: 502 }
     );
   }

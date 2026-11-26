@@ -27,7 +27,7 @@ async function mbFetch(path: string): Promise<Response> {
     const res = await fetch(`${BASE_URL}${path}`, {
       headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
     });
-    if (res.status !== 503 || attempt === 3) return res;
+    if (res.status !== 503 || attempt === 4) return res;
     await sleep(1500 * attempt);
   }
 }
@@ -165,7 +165,7 @@ async function searchCandidates(query: string): Promise<MBCandidate[]> {
   const res = await mbFetch(
     `/release?query=${encodeURIComponent(query)}&fmt=json&limit=50`
   );
-  if (!res.ok) return [];
+  if (!res.ok) throw new Error(`MusicBrainz search failed (${res.status})`);
   const data = await res.json();
   return parseCandidates(data.releases ?? []);
 }
