@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { signSession, setAuthCookie } from "@/lib/auth";
+import { signSession, setAuthCookie, adminPath } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -37,10 +37,12 @@ export async function GET(request: NextRequest) {
   }
 
   const token = await signSession({ sub: String(user.id) });
-  const response = NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/admin`);
+  const target = adminPath(request.cookies.get("oauth_next")?.value) ?? "/admin";
+  const response = NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}${target}`);
   setAuthCookie(response, token);
 
   response.cookies.set("oauth_state", "", { maxAge: 0, path: "/" });
+  response.cookies.set("oauth_next", "", { maxAge: 0, path: "/" });
 
   return response;
 }

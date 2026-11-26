@@ -8,6 +8,10 @@ export interface Session {
   sub: string;
 }
 
+export function adminPath(path: string | null | undefined): string | null {
+  return path && /^\/admin(\/[\w\-/]*)?$/.test(path) ? path : null;
+}
+
 export async function signSession(payload: Session): Promise<string> {
   return new SignJWT(payload as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
