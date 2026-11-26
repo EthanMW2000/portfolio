@@ -190,6 +190,11 @@ export default function VinylScan() {
     setError(null);
     try {
       setter(await resizePhoto(file));
+      setExtracted(null);
+      setCandidates(null);
+      setMatchedBy("none");
+      setSelected(null);
+      setPreview(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't open that photo");
     }
