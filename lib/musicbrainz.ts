@@ -341,7 +341,10 @@ export async function getItunesArtworkUrl(
       artworkUrl100?: string;
     }[];
     const various = /^various( artists)?$/i.test(artist.trim());
-    const exact = (a: string, b: string) => normalizeName(a) === normalizeName(b);
+    const exact = (a: string, b: string) => {
+      const x = normalizeName(a);
+      return x.length > 0 && x === normalizeName(b);
+    };
     const withArt = results.filter((r) => r.artworkUrl100 && r.collectionName && r.artistName);
     const match =
       withArt.find(
