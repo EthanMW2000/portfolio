@@ -340,14 +340,18 @@ export async function getItunesArtworkUrl(
       artistName?: string;
       artworkUrl100?: string;
     }[];
-    const various = /various/i.test(artist);
-    const match = results.find(
-      (r) =>
-        r.artworkUrl100 &&
-        r.collectionName &&
-        looselyEqual(r.collectionName, title) &&
-        (various || (r.artistName && looselyEqual(r.artistName, artist)))
-    );
+    const various = /^various( artists)?$/i.test(artist.trim());
+    const exact = (a: string, b: string) => normalizeName(a) === normalizeName(b);
+    const withArt = results.filter((r) => r.artworkUrl100 && r.collectionName && r.artistName);
+    const match =
+      withArt.find(
+        (r) => exact(r.collectionName!, title) && (various || exact(r.artistName!, artist))
+      ) ??
+      (various
+        ? undefined
+        : withArt.find(
+            (r) => looselyEqual(r.collectionName!, title) && looselyEqual(r.artistName!, artist)
+          ));
     return match?.artworkUrl100?.replace(/\/\d+x\d+bb\./, "/1200x1200bb.") ?? null;
   } catch {
     return null;
