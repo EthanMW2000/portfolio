@@ -9,7 +9,7 @@ export const maxDuration = 60;
 const NON_WORD = new RegExp("[^\\p{L}\\p{N}]+", "gu");
 
 function normalize(value: string): string {
-  return value.toLowerCase().replace(NON_WORD, "");
+  return value.toLowerCase().normalize("NFKD").replace(NON_WORD, "");
 }
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
