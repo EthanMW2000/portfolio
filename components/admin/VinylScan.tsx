@@ -470,7 +470,14 @@ export default function VinylScan() {
                           <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
                             {details}
                           </Typography>
-                          {c.inCollection && <Chip size="small" color="warning" label="Already in collection" sx={{ mt: 0.5 }} />}
+                          {c.inCollection && (
+                            <Chip
+                              size="small"
+                              color="warning"
+                              label={c.inCollection === "release" ? "Already in collection" : "You have another pressing"}
+                              sx={{ mt: 0.5 }}
+                            />
+                          )}
                         </Box>
                       </Box>
                     );

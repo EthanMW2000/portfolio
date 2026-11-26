@@ -95,7 +95,7 @@ export interface MBCandidate extends MBRelease {
   label: string | null;
   catalogNumber: string | null;
   barcode: string | null;
-  inCollection?: boolean;
+  inCollection?: "release" | "album";
 }
 
 export type LookupMatch = "barcode" | "catalogNumber" | "search" | "none";

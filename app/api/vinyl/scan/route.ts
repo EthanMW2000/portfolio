@@ -69,9 +69,11 @@ export async function POST(request: NextRequest) {
       matchedBy,
       candidates: candidates.map((c) => ({
         ...c,
-        inCollection:
-          owned.has(c.id) ||
-          ownedNames.has(`${normalize(c.artist)}|${normalize(c.title)}`),
+        inCollection: owned.has(c.id)
+          ? "release"
+          : ownedNames.has(`${normalize(c.artist)}|${normalize(c.title)}`)
+            ? "album"
+            : undefined,
       })),
     });
   } catch (err) {
