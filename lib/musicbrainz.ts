@@ -250,7 +250,7 @@ export async function getReleaseDetails(
   const res = await mbFetch(
     `/release/${releaseId}?inc=recordings+release-groups&fmt=json`
   );
-  if (!res.ok) return { tracks: [], releaseGroupId: null };
+  if (!res.ok) throw new Error(`MusicBrainz release lookup failed (${res.status})`);
 
   const data = await res.json();
   const tracks: MBTrack[] = [];
